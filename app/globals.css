@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
+/* :root {
+  --background: hsl(0, 0%, 100%);
   --foreground: #171717;
 }
 
@@ -12,16 +12,22 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+html {
+  height: 100%;
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  body {
+    min-height: 100%;
   }
+}
+h1 {
+  @apply text-6xl font-semibold;
+}
+
+h2 {
+  @apply text-3xl font-semibold tracking-tight;
+}
+h3 {
+  @apply text-2xl font-semibold;
 }

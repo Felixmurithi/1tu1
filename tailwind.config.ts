@@ -9,8 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "blue-background": "rgb(33, 62, 130)",
+        "pink-accent": "rgb(255, 135, 212)",
+        "orange-accent": "rgb(255, 130, 112)",
+        "light-blue": "#f0fbff",
+      },
+      screens: {
+        mobile: "440px",
+        tall: { raw: "(min-height: 1100px)" },
       },
     },
   },
