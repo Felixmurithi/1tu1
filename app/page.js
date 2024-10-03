@@ -1,26 +1,31 @@
 import Button from "@/app/_components/Button";
+import Header from "@/app/_components/Header";
 
 export default function Home() {
   return (
-    <main className="grid mobile:grid-cols-[1fr_2fr] p-16 bg-blue-background">
-      <div className="grid h-fit gap-14 bg-blue-background text-white">
-        <div className="grid h-fit gap-6">
-          <h1 className=" mobile:text-5xl text-4xl tracking-tight ">
-            Match your interests
-          </h1>
-          <p className="opacity-50">
-            Find a life partner who reflects your life goals. Create a profile
-            and find people with similar profile
-          </p>
+    <main
+      className="h-dvh relative rounded-3xl m-4 text-white grid place-items-center "
+      style={{
+        backgroundImage: `linear-gradient(rgba(12, 15, 10, 0.2) 90%,rgba(12, 15, 10, 0.2)
+),url(/cover.jpg)`,
+        backgroundSize: "cover",
+        backgroundPosition: `top center`,
+      }}
+    >
+      <Header />
+      <div className="w-[80%] m-auto flex justify-around h-fit gap-16">
+        <div className="grid gap-6 items-start">
+          <h1 className="">Match your Interest</h1>
+          <h3>Find long term relationships that fit you</h3>
+          <Button>sign up</Button>
         </div>
-        <Button>sign up</Button>
-      </div>
 
-      <img
-        src="/cover.jpg"
-        alt=""
-        className="w-[300px] lg:w-[450px] justify-self-end"
-      />
+        <ul className="grid gap-3">
+          <li className="bold-list">✔ Long term relationships only</li>
+          <li className="bold-list">✔ Match your interest</li>
+          <li className="bold-list">✔ Match your profession</li>
+        </ul>
+      </div>
     </main>
   );
 }

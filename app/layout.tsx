@@ -1,5 +1,3 @@
-import Header from "@/app/_components/Header";
-
 import "@/app/globals.css";
 
 export const metadata = {
@@ -14,11 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="grid grid-rows-[auto_1fr_auto] mx-auto">
-        <Header />
-        {children}
-        <footer></footer>
-      </body>
+      <body className="grid grid-rows-[auto_1fr_auto] mx-auto">{children}</body>
     </html>
   );
 }

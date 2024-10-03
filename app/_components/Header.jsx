@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex w-full justify-between py-5 gap-3 text-sm mobile:text-base px-10 border-b-blue-background border-b ">
+    <header className="flex w-full justify-between py-5 gap-3 text-sm mobile:text-base px-10 absolute top-0 ">
       <Link
         className="text-orange-accent tracking-wide italic font-extrabold"
         href={"/"}
