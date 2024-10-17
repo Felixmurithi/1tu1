@@ -7,10 +7,9 @@ export default function SelectPreference({
   dispatchType,
   allPreferences,
 }) {
-  console.log(state);
   return (
-    <div className="bg-white p-4 grid  gap-6">
-      <div className="grid grid-cols-2 w-fit">
+    <div className="flex justify-between">
+      <div className="grid grid-cols-2 gap-2 w-fit">
         <label htmlFor={`interest`} className="w-min">
           {dispatchType}
         </label>

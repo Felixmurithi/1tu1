@@ -12,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="grid grid-rows-[auto_1fr_auto] mx-auto">{children}</body>
+      <body className="">{children}</body>
     </html>
   );
 }

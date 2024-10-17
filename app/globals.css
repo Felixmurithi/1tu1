@@ -29,7 +29,7 @@ h2 {
   @apply text-3xl font-semibold tracking-tight;
 }
 h3 {
-  @apply text-2xl font-semibold;
+  @apply text-xl font-semibold;
 }
 .bold-list {
   @apply text-lg font-semibold;

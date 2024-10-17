@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Input from "../Input";
+import Input from "@/app/_components/Input";
 
 const professions = [
   "IT professional",

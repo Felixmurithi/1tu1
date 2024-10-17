@@ -38,5 +38,14 @@ export const ageRanges = [
   "60+",
 ];
 export const ratings = ["1-4", "5-6", "7-8", "9-10"];
-export const finances = ["broke", "okay", "well", "wealthy"];
+
 export const professions = ["student", "barber", "farmer", "HR"];
+
+export const personalities = [
+  "humour",
+  "introvert",
+  "extrovert",
+  "serious yapper",
+  "anxious",
+];
+export const finances = ["broke", "survival mode", "just okay", "doing well"];

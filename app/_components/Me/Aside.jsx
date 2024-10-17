@@ -4,7 +4,7 @@ const tabs = ["Profile", " Matches", " Preferences +", "Settings"];
 
 function Aside({ tab, setTab }) {
   return (
-    <aside className="flex flex-col gap-10   padding-top pl-4 pr-2 w-fit">
+    <aside className="flex flex-col gap-10   padding-top w-fit ">
       {tabs.map((_, i) => {
         const active = tab === i;
         return (

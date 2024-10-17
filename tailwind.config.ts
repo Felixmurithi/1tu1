@@ -13,6 +13,7 @@ const config: Config = {
         "pink-accent": "rgb(255, 135, 212)",
         "orange-accent": "rgb(255, 130, 112)",
         "light-blue": "#f0fbff",
+        grey: "#f6f6f6",
       },
       screens: {
         mobile: "440px",
