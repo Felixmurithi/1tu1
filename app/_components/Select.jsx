@@ -5,7 +5,7 @@ function Select({ text, options, classes, onChange, name, id, onClickOption }) {
     <select
       name={name}
       id={id}
-      className={`${classes} px-2 rounded-md bg-deepSeaweed-tints-700`}
+      className={`${classes} px-4 rounded-md bg-deepSeaweed-tints-700`}
       onChange={onChange}
     >
       <option hidden value="">

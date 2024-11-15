@@ -7,6 +7,8 @@ function Input({
   onChange,
   children,
   value,
+  reactHooKFormValidate,
+  border = true,
 }) {
   return (
     <input
@@ -17,7 +19,10 @@ function Input({
       id={id}
       type={`${type}`}
       placeholder={children}
-      className={`${classes} rounded-sm h-8  border  px-2`}
+      className={`${classes} ${
+        border ? "border border-stone-400 " : ""
+      } rounded h-8    px-2`}
+      {...reactHooKFormValidate}
     />
   );
 }

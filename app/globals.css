@@ -16,21 +16,25 @@
 
 html {
   height: 100%;
+  box-sizing: border-box;
 
   body {
-    min-height: 100%;
+    height: 100%;
   }
 }
 h1 {
   @apply text-6xl font-semibold;
 }
-
 h2 {
-  @apply text-3xl font-semibold tracking-tight;
+  @apply text-4xl font-semibold;
 }
 h3 {
   @apply text-xl font-semibold;
 }
-.bold-list {
-  @apply text-lg font-semibold;
+
+a:link,
+a:visited {
+}
+a:hover,
+a:active {
 }

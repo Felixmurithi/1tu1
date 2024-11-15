@@ -1,4 +1,11 @@
+import localFont from "next/font/local";
 import "@/app/globals.css";
+
+// Font files can be colocated inside of `app`
+const myFont = localFont({
+  src: "./fonts/GeistVF.woff",
+  display: "swap",
+});
 
 export const metadata = {
   title: "Ideally",
@@ -11,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="">{children}</body>
+    <html lang="en" className={`${myFont.className} tracking`}>
+      <body>{children}</body>
     </html>
   );
 }
