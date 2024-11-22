@@ -16,18 +16,21 @@ export default function Home() {
         <div className="w-[80%] mx-auto flex  justify-around h-fit gap-16 rounded-full">
           <div className="grid gap-6 items-start">
             <div className="grid gap-16">
-              <Logo />
+              <div className="flex gap-6">
+                <Logo />
+                <p className="font-bold text-lg self-center">
+                  Go out and meet new people.
+                </p>
+              </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex gap-4">
                 <Button>signup</Button>
                 <Button type="transparent" link="/api/auth/signin">
                   Login
                 </Button>
               </div>
             </div>
-            <div></div>
           </div>
-          <p className="font-bold text-lg">Go out and meet new people.</p>
         </div>
       </div>
     </main>

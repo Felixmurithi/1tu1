@@ -1,11 +1,18 @@
 import Header from "@/app/_components/Header";
 import SignInButton from "@/app/_components/SignInButton";
+import { auth } from "../_lib/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Login",
 };
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+
+  if (session) {
+    redirect("/dates", "replace");
+  }
   return (
     <main className="">
       <Header />

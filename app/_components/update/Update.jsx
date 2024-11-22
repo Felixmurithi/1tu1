@@ -1,25 +1,46 @@
 "use client";
 
-import FormRow from "@/app/_components/FormRow";
+import { useEffect, useState } from "react";
 import Button from "@/app/_components/Button";
-import Image from "@/app/_components/update/Image";
-import { useState } from "react";
+import FormRow from "@/app/_components/FormRow";
+import { DatePicker, Provider, defaultTheme } from "@adobe/react-spectrum";
 import { getLocalTimeZone, today } from "@internationalized/date";
-import { Provider, defaultTheme, DatePicker } from "@adobe/react-spectrum";
+import ProfileImage from "@/app/_components/update/ProfileImage";
 
-function Update() {
+export default function Update() {
   const [date, setDate] = useState(today(getLocalTimeZone()));
+
+  const [imgURL, setImgURL] = useState();
+  const [imgError, setIMgError] = useState("");
+
+  function handleImageChange(img, maxSize = 4) {
+    if (img.size / 1024 / 1024 <= maxSize) {
+      setIMgError("");
+      setImgURL(URL.createObjectURL(img));
+    } else {
+      setIMgError("image should be of type jpeg, jpg or png and less than 4MB");
+    }
+  }
+
+  useEffect(function () {
+    return URL.revokeObjectURL(imgURL);
+  }, []);
+
   return (
-    <div>
-      <form className="w-[60%] h-fit  border p-4 grid gap-4 justify-start">
-        <h3>Sign up</h3>
+    <div className="grid place-items-center gap-6 ">
+      <form className=" w-fit   p-4 grid gap-12 justify-start shadow-lg  px-16 pb-8 ">
+        <h3 className="font-thin">Update Profile</h3>
 
         <FormRow label="Profile Picture">
-          <Image />
+          <ProfileImage handleImageChange={handleImageChange} imgURL={imgURL} />
+
+          {/* <img src={imgURL} alt="" /> */}
+
+          {imgError && <p className="block">{imgError}</p>}
         </FormRow>
 
         <FormRow label="gender" id="lastName">
-          <select id="">
+          <select id="" className="px-2 py-1 rounded">
             <option value="" hidden>
               select
             </option>
@@ -40,38 +61,6 @@ function Update() {
 
         <Button>Submit</Button>
       </form>
-
-      <Button>Skip</Button>
     </div>
   );
 }
-
-export default Update;
-
-//   <html>
-// <body>
-// <input name="image" type="file" id="fileName" accept=".jpg,.jpeg,.png" onchange="validateFileType()"/>
-// <script type="text/javascript">
-//     function validateFileType(){
-//         var fileName = document.getElementById("fileName").value;
-//         var idxDot = fileName.lastIndexOf(".") + 1;
-//         var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-//         if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
-//             //TO DO
-//         }else{
-//             alert("Only jpg/jpeg and png files are allowed!");
-//         }
-//     }
-// </script>
-// </body>
-// </html>
-
-//Image
-///lcal
-// diont even beed dimsnions. teh are added auto by next depending on your layout sizing.
-
-//remote
-// remote images in next needs dimensions to eb able to calculate the right size depending on teh scren size
-// style={{
-//   objectFit: 'cover', // cover, contain, none
-// }}

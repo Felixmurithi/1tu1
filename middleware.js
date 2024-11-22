@@ -3,9 +3,19 @@
 
 import { auth } from "./app/_lib/auth";
 
-export const middleware = auth;
+// export const middleware = auth;
+export const middleware = auth((req) => {
+  // if (req.auth)
+  if (!req.auth && req.nextUrl.pathname !== "/login") {
+    const newUrl = new URL("/login", req.nextUrl.origin);
+    return Response.redirect(newUrl);
+  }
+  // if (req.nextUrl.pathname==="/update" && che)
+});
+
 export const config = {
-  matcher: ["/dates", "/user"],
+  // matcher: ["/dates", "/user"],
+  matcher: ["/user", "/dates"],
 };
 
 // Middleware, request, redirecting and matching the route to run the middleware function

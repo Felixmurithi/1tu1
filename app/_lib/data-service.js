@@ -1,5 +1,20 @@
-export async function createUser(newGuest) {
-  const { data, error } = await supabase.from("guests").insert([newGuest]);
+import { supabase } from "./supabase";
+
+export async function getBirthdayGender(email) {
+  let { data, error } = await supabase
+    .from("users")
+    .select("gender,birthday")
+    .eq("email", email);
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not get loaded");
+  }
+
+  return data;
+}
+
+export async function createUser(newUser) {
+  const { data, error } = await supabase.from("users").insert([newUser]);
 
   if (error) {
     console.error(error);

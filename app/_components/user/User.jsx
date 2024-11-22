@@ -11,7 +11,7 @@ function User() {
         <Profile />
         <div className="grid gap-6 bg-grey p-4 mx-10">
           {/* <Dating /> */}
-          <Interest />
+          {/* <Interest /> */}
 
           {/* <Preferences /> */}
         </div>

@@ -2,10 +2,11 @@ import Link from "next/link";
 
 import LogoI from "@/app/_components/LogoI";
 import Button from "./Button";
+import SignOutButton from "@/app/_components/SignOutButton";
 
 export default function Header() {
   return (
-    <header className="flex w-full justify-between py-5 gap-3 text-sm mobile:text-base px-10  top-0 ">
+    <header className="flex w-full justify-between py-5 gap-3 text-sm mobile:text-base px-10  top-0 border-b">
       <Link className=" " href={"/"}>
         <LogoI />
       </Link>
@@ -23,17 +24,7 @@ export default function Header() {
           </svg>
         </Button>
 
-        <Button link={"/settings"} type="icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            className="fill-rose-500"
-          >
-            <path d="M224.62-160q-27.62 0-46.12-18.5Q160-197 160-224.62v-510.76q0-27.62 18.5-46.12Q197-800 224.62-800h256.15v40H224.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v510.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69h256.15v40H224.62Zm433.84-178.46-28.08-28.77L723.15-460H367.69v-40h355.46l-92.77-92.77 28.08-28.77L800-480 658.46-338.46Z" />
-          </svg>
-        </Button>
+        <SignOutButton />
       </div>
     </header>
   );

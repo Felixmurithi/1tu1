@@ -25,7 +25,6 @@ export default function Interest() {
   }
 
   function addInterest(interest) {
-    console.log(interest);
     if (!interests[0]) return setInterests([interest]);
     if (interests.find((element) => element === interest)) return;
     else

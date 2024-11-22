@@ -7,4 +7,6 @@ export async function signInAction() {
 
 export async function signOutAction() {
   await signOut("google", { redirectTo: "/" });
+
+  // signOut({ redirectTo: "/", replace: true });
 }

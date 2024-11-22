@@ -17,27 +17,32 @@ const authConfig = {
     authorized({ auth, request }) {
       return !!auth?.user;
     },
-  },
 
-  async signIn({ user, account, profile }) {
-    try {
-      const existingGuest = await getUser(user.email);
-      if (!existingGuest)
-        await createGuest({
-          email: user.email,
-          fullName: user.name,
-        });
+    async signIn({ user, account, profile }) {
+      try {
+        const existingGuest = await getUser(user.email);
+        if (!existingGuest) {
+          await createUser({
+            email: user.email,
+            name: user.name,
+          });
+        }
 
-      return true;
-    } catch {
-      return false;
-    }
-  },
+        return true;
+      } catch {
+        return false;
+      }
+    },
 
-  async session({ session, user }) {
-    const guest = await getUser(session.user.email);
-    session.user.guestId = guest.id;
-    return session;
+    async session({ session, user }) {
+      const guest = await getUser(session.user.email);
+      session.user.guestId = guest.id;
+      return session;
+    },
+    // async redirect({ url, baseUrl }) {
+    //   console.log(baseUrl, url);
+    //   return baseUrl + "/";
+    // },
   },
 
   pages: {
@@ -52,3 +57,5 @@ export const {
   handlers: { GET, POST },
 } = NextAuth(authConfig);
 // next auth function called with the config to automate those things
+
+// the callbacks
