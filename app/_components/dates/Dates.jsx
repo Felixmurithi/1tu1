@@ -1,9 +1,9 @@
 "use client";
+import { useState } from "react";
 import Locations from "@/app/_components/dates/Locations";
 import DateList from "@/app/_components/dates/Dateslist";
 import Notifications from "@/app/_components/dates/Notifications";
 import Button from "../Button";
-import { useState } from "react";
 
 export default function Dates() {
   const [tab, setTab] = useState(0);

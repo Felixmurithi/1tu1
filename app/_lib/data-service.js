@@ -1,4 +1,3 @@
-import { error } from "console";
 import { supabase, supabaseUrl } from "./supabase";
 
 export async function updateDB(table, updatedField, userId) {
