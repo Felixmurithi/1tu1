@@ -3,7 +3,7 @@ import "@/app/globals.css";
 
 // Font files can be colocated inside of `app`
 const myFont = localFont({
-  src: "./fonts/GeistVF.woff",
+  src: "../fonts/GeistVF.woff",
   display: "swap",
 });
 
@@ -23,3 +23,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+// ""./fonts/GeistVF.woff" src when using

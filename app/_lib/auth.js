@@ -35,8 +35,8 @@ const authConfig = {
     },
 
     async session({ session, user }) {
-      const guest = await getUser(session.user.email);
-      session.user.guestId = guest.id;
+      const userData = await getUser(session.user.email);
+      session.user.userId = userData.id;
       return session;
     },
     // async redirect({ url, baseUrl }) {

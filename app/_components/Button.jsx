@@ -8,6 +8,7 @@ export default function Button({
   link = "",
   type = "primary",
   classes,
+  disabled,
 }) {
   const buttonStyles = {
     primary:
@@ -23,6 +24,7 @@ export default function Button({
       type={`${link || onClick ? "button" : "submit"}`}
       className={` ${buttonStyles[type]}  rounded-md ${classes} h-8 w-fit`}
       onClick={onClick}
+      disabled={disabled}
     >
       {link ? <Link href={link}>{children}</Link> : children}
     </button>
@@ -31,7 +33,7 @@ export default function Button({
 
 export function SaveButton({ onClick }) {
   return (
-    <button type="button" onClick={() => onClick}>
+    <button type="button" onClick={() => onClick()}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="24px"
@@ -47,7 +49,7 @@ export function SaveButton({ onClick }) {
 
 export function CancelButton({ onClick }) {
   return (
-    <button type="button" onClick={() => onClick}>
+    <button type="button" onClick={() => onClick()}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="24px"
