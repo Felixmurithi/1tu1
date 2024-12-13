@@ -2,6 +2,10 @@ import Update from "@/app/_components/update/Update";
 import { auth } from "../../_lib/auth";
 import { getuserData } from "@/app/_lib/action";
 
+export const metadata = {
+  title: "About profile",
+};
+
 export default async function Page() {
   const session = await auth();
   let user = {};

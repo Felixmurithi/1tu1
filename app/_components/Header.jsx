@@ -5,7 +5,7 @@ import SignOutButton from "@/app/_components/SignOutButton";
 
 export default function Header() {
   return (
-    <header className="flex w-full justify-between py-5 gap-3 text-sm mobile:text-base px-10  top-0 border-b">
+    <header className="flex max-w-full justify-between py-5 gap-3 text-sm mobile:text-base px-10  top-0 border-b">
       <Link className=" " href={"/"}>
         <LogoI />
       </Link>

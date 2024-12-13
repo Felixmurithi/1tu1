@@ -1,6 +1,17 @@
-export default function ProfileCard() {
+export default function ProfileCard({
+  image,
+  googleImage,
+  gender,
+  location,
+  expanded = false,
+  user = false,
+}) {
   return (
-    <div className=" border-2 rounded-xl bg-white p-2 grid gap-2 shadow-md">
+    <div
+      className={`border-2 rounded-xl bg-white p-2 grid gap-2 shadow-md ${
+        user ? "border border-orange-500" : ""
+      }`}
+    >
       <div className="grid grid-cols-[1fr_auto]">
         <div className="flex gap-2 items-center ">
           <img

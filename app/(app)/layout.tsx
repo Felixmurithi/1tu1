@@ -19,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${myFont.className} tracking`}>
-      <body>
+    <html lang="en" className={`${myFont.className}`}>
+      <body className="grid grid-rows-[auto_1fr]">
         <Header />
 
         {children}
@@ -30,3 +30,5 @@ export default function RootLayout({
 }
 
 // body should be the only child ellement of html
+
+// uysing grid u dont even have to use h-full on the child componenet

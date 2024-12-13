@@ -129,7 +129,6 @@ export default function Update({
           formData.append("userId", userId);
 
           const data = await updateUser(formData);
-          console.log(data);
           setLoadingII(false);
           notifyUserDataUpdated();
           router.push("/dates");

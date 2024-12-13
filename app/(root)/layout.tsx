@@ -8,10 +8,15 @@ const myFont = localFont({
 });
 
 export const metadata = {
-  title: "Ideally",
-  description: "Find a life partner who matches ur interest",
-};
+  // title: "The wild oasis",
+  title: {
+    template: "%s / 1tu1",
+    default: "Welcome / 1tu1",
+  },
 
+  description:
+    "Kuomba number and heys ends here. Meet a date at your favourite restuarant.",
+};
 export default function RootLayout({
   children,
 }: {

@@ -16,7 +16,7 @@ export default function Home() {
         <div className="w-[80%] mx-auto flex  justify-around h-fit gap-16 rounded-full">
           <div className="grid gap-6 items-start">
             <div className="grid gap-16">
-              <div className="flex gap-6">
+              <div className="flex items-start gap-6">
                 <Logo />
                 <p className="font-bold text-lg self-center">
                   Go out and meet new people.

@@ -2,6 +2,12 @@
 import { signIn, signOut } from "./auth";
 import { getDBData, updateDB } from "@/app/_lib/data-service";
 
+export async function updateDatelocation({ location, userId }) {
+  const data = await updateDB("locations", data, userId);
+
+  return data;
+}
+
 export async function getuserData({ table, fields, userId }) {
   const data = await getDBData(table, fields, userId);
 

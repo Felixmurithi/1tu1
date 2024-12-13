@@ -4,28 +4,20 @@ import ProfileCard from "@/app/_components/dates/ProfileCard";
 
 function DatesList() {
   return (
-    <div className=" grid grid-rows-[auto_1fr] gap-4">
-      <div className="flex px-2">
-        <Select
-          text={"distance"}
-          options={["near me", "5 km", "10km", "20km", "50km"]}
-        />
-        <Button type="icon">🎬 filters</Button>
-      </div>
-
-      <div className="p-2 grid grid-rows-[auto_1fr] gap-4   content-start  ">
+    <div className="">
+      <div className="p-2 grid grid-rows-[auto_1fr] gap-4 h-full   ">
         <h4 className="font-sm font-extralight border-b">near you</h4>
-        <div className="relative">
-          <div className=" overflow-y-auto absolute top-0 bottom-0 right-0 left-0 grid content-start gap-4">
-            <ProfileCard />
-            <ProfileCard />
-            <ProfileCard />
-            {/* <ProfileCard />
+        <div className="relative ">
+          <div className=" overflow-y-auto absolute top-0 bottom-0 right-0 left-0 grid  gap-4  z-40">
             <ProfileCard />
             <ProfileCard />
             <ProfileCard />
             <ProfileCard />
-            <ProfileCard /> */}
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
           </div>
         </div>
       </div>
@@ -34,4 +26,6 @@ function DatesList() {
 }
 
 export default DatesList;
-// grid item streatches to fit height
+// grid items streatche if cols or rows height heights or fractions defined
+//
+// content-start - makes relative positioned element lose height if children elements  are absolute,

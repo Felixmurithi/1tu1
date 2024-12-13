@@ -4,6 +4,10 @@ import Dates from "@/app/_components/dates/Dates";
 import getAge from "@/app/_utils/getAge";
 import { getuserData } from "@/app/_lib/action";
 
+export const metadata = {
+  title: "Find dates",
+};
+
 export default async function page() {
   const session = await auth();
   // makes the entire roiutedynamic because it uses  cookies
@@ -16,7 +20,6 @@ export default async function page() {
       fields: ["gender", "birthday", "image"],
       userId: session?.user.userId,
     });
-
     user.image = image;
     user.gender = gender;
     user.age = getAge(birthday);
@@ -30,9 +33,9 @@ export default async function page() {
     <>
       <Dates
         userId={session?.user.userId}
-        googleImage={user.image ? "" : session?.user.image}
-        uploadedImage={user.image}
+        image={user.image || session?.user.image}
         gender={user.gender}
+        name={session?.user.name}
       />
     </>
   );
