@@ -1,6 +1,6 @@
 import Update from "@/app/_components/update/Update";
 import { auth } from "../../_lib/auth";
-import { getuserData } from "@/app/_lib/action";
+import { getUserData } from "@/app/_lib/data-service";
 
 export const metadata = {
   title: "About profile",
@@ -11,13 +11,11 @@ export default async function Page() {
   let user = {};
 
   if (session?.user.userId) {
-    const [{ image, gender, birthday }] = await getuserData({
-      table: "users",
-      fields: ["image", "gender", "birthday"],
-      userId: session?.user.userId,
-    });
-
-    user.uploadedImage = image;
+    const [{ image, gender, birthday }] = await getUserData(
+      ["image", "gender", "birthday"],
+      session?.user.userId
+    );
+    user.image = image;
     user.gender = gender;
     user.birthday = birthday;
   }
@@ -26,8 +24,7 @@ export default async function Page() {
     <>
       <Update
         userId={session?.user.userId}
-        googleImage={user.uploadedImage ? "" : session?.user.image}
-        uploadedImage={user.uploadedImage}
+        userImage={user.image}
         gender={user.gender}
         birthday={user.birthday}
       />

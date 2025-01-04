@@ -1,6 +1,82 @@
 import { supabase, supabaseUrl } from "./supabase";
 
-export async function updateDB(table, updatedField, userId) {
+export async function getMyDateLocation(userid) {
+  const { data, error } = await supabase
+    .from("locations")
+    .select("*")
+    .eq("userid", userid);
+
+  if (data) return data;
+
+  if (error) {
+    console.error(error);
+    throw new Error("Error fetching location");
+  }
+}
+
+export async function getAllDatesData(long, lat, currentuserid) {
+  const { data, error } = await supabase.rpc("all_dates", {
+    long,
+    lat,
+    currentuserid,
+  });
+
+  if (data) return data;
+
+  if (error) {
+    console.error(error);
+    throw new Error("Error fetching dates");
+  }
+}
+
+export async function getNearbyDatesData(long, lat, meters, currentuserid) {
+  const { data, error } = await supabase.rpc("nearby_dates", {
+    long,
+    lat,
+    meters,
+    currentuserid,
+  });
+
+  if (data) return data;
+
+  if (error) {
+    console.error(error);
+    throw new Error("Error fetching nearby dates");
+  }
+}
+
+export async function updateInsertLocation(location) {
+  const { data, error } = await supabase
+    .from("locations")
+    .select("userid")
+    .eq("userid", location.userid);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Error updating location");
+  }
+
+  if (data[0]) {
+    const { data, error } = await supabase
+      .from("locations")
+      .update(location)
+      .eq("userid", location.userid);
+
+    if (error) {
+      console.error(error);
+      throw new Error("Location could not be updated");
+    }
+  } else {
+    const { data, error } = await supabase.from("locations").insert([location]);
+
+    if (error) {
+      console.error(error);
+      throw new Error("Location could not be created");
+    }
+  }
+}
+
+export async function updateUserData(table, updatedField, userId) {
   const { data, error } = await supabase
     .from(table)
     .update(updatedField)
@@ -11,12 +87,26 @@ export async function updateDB(table, updatedField, userId) {
     console.error(error);
     throw new Error("Row could not be updated");
   }
+
   return data;
 }
 
-export async function getDBData(table, fields, userId) {
+export async function getUserLocationData(fields, userId) {
   let { data, error } = await supabase
-    .from(table)
+    .from("locations")
+    .select(typeof fields == "string" ? fields : fields.join(","))
+    .eq("userid", userId);
+
+  if (error) {
+    console.error(error);
+    throw new Error("could not fetch data");
+  }
+
+  return data;
+}
+export async function getUserData(fields, userId) {
+  let { data, error } = await supabase
+    .from("users")
     .select(typeof fields == "string" ? fields : fields.join(","))
     .eq("id", userId);
 
@@ -29,7 +119,7 @@ export async function getDBData(table, fields, userId) {
 }
 
 export async function uploadImage(image, userId) {
-  const [{ image: imageExistingPath }] = await getDBData(
+  const [{ image: imageExistingPath }] = await getUserData(
     "users",
     "image",
     userId
@@ -97,26 +187,28 @@ export async function getBirthdayGender(email) {
   return data;
 }
 
-export async function createUser(newUser) {
+export async function createNewUser(newUser) {
   const { data, error } = await supabase.from("users").insert([newUser]);
 
   if (error) {
     console.error(error);
     throw new Error("Guest could not be created");
   }
-  console.log(data);
 
   return data;
 }
 
 // Guests are uniquely identified by their email address
-export async function getUser(email) {
+export async function getUserByEmail(email) {
   const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("email", email)
     .single();
 
-  // No error here! We handle the possibility of no guest in the sign in callback
+  //   // No error here! We handle the possibility of no guest in the sign in callback
   return data;
 }
+
+// Post gress lat-lng- use postgis extension
+// add named schema

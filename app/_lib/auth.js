@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import { createUser, getUser } from "./data-service";
+import { createNewUser, getUserByEmail } from "./data-service";
 
 // starts of api/auth/signin- the signIn page option used to replace the defualt
 //
@@ -20,11 +20,12 @@ const authConfig = {
 
     async signIn({ user, account, profile }) {
       try {
-        const existingGuest = await getUser(user.email);
+        const existingGuest = await getUserByEmail(user.email);
         if (!existingGuest) {
-          await createUser({
+          await createNewUser({
             email: user.email,
             name: user.name,
+            image: user.image,
           });
         }
 
@@ -35,7 +36,7 @@ const authConfig = {
     },
 
     async session({ session, user }) {
-      const userData = await getUser(session.user.email);
+      const userData = await getUserByEmail(session.user.email);
       session.user.userId = userData.id;
       return session;
     },

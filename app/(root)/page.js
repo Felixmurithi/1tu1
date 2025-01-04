@@ -24,7 +24,7 @@ export default function Home() {
               </div>
 
               <div className="flex gap-4">
-                <Button>signup</Button>
+                <Button link="/api/auth/signin">signup</Button>
                 <Button type="transparent" link="/api/auth/signin">
                   Login
                 </Button>

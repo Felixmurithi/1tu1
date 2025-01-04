@@ -3,16 +3,16 @@
 
 import { auth } from "./app/_lib/auth";
 
-// export const middleware = auth;
-export const middleware = auth((req) => {
-  // if (req.auth)
-  console.log(req.nextUrl.pathname);
-  if (!req.auth && req.nextUrl.pathname !== "/login") {
-    const newUrl = new URL("/login", req.nextUrl.origin);
-    return Response.redirect(newUrl);
-  }
-  // if (req.nextUrl.pathname==="/update" && che)
-});
+export const middleware = auth;
+// export const middleware = auth((req) => {
+//   // if (req.auth)
+//   console.log(req.auth, req.nextUrl.pathname);
+//   if (!req.auth && req.nextUrl.pathname !== "/login") {
+//     const newUrl = new URL("/login", req.nextUrl.origin);
+//     return Response.redirect(newUrl);
+//   }
+//   // if (req.nextUrl.pathname==="/update" && che)
+// });
 
 export const config = {
   matcher: ["/dates", "/update"],

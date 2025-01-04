@@ -1,41 +1,21 @@
 import Image from "next/image";
 
-export default function ProfileImage({
-  image,
-  googleImage,
-  imgURL,
-  handleImageChange,
-}) {
-  if (image) googleImage = undefined;
-
+export default function ProfileImage({ image, imgURL, handleImageChange }) {
   return (
     <div>
       <div onClick={() => document.getElementById("selectImage").click()}>
         <div className=" aspect-square relative w-[150px]">
-          {imgURL || image ? (
-            <Image
-              src={imgURL || image || "/svg/account.svg"}
-              alt="profile Image"
-              fill
-              // style={{ objectFit: "cover" }}
-              className={`border-2 ${
-                imgURL ? "opacity-50" : ""
-              } object-cover rounded-full`}
-              // width={150}
-              // height={150}
-            />
-          ) : (
-            <img
-              src={googleImage}
-              alt="profile image"
-              // style={{ objectFit: "cover" }}
-              className={`border-2 ${
-                imgURL ? "opacity-50" : ""
-              } object-cover rounded-full bg-orange-200 `}
-              width={150}
-              height={150}
-            />
-          )}
+          <Image
+            src={imgURL || image || "/svg/account.svg"}
+            alt="profile Image"
+            fill
+            // style={{ objectFit: "cover" }}
+            className={`border-2 ${
+              imgURL ? "opacity-50" : ""
+            } object-cover rounded-full`}
+            // width={150}
+            // height={150}
+          />
         </div>
         <input
           type="file"

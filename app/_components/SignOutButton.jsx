@@ -1,9 +1,19 @@
+"use client";
+
+// import Router from "next/router";
 import { signOutAction } from "../_lib/action";
 
 function SignOutButton() {
   return (
     <form action={signOutAction}>
-      <button>
+      <button
+        className="px-1 py-0 w-max  hover:bg-orange-100"
+        // onClick={() => {
+        //   signOutAction().then(() => {
+        //     Router.push("/"); // Redirect to the dashboard page after signing out
+        //   });
+        // }}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="24px"
@@ -19,3 +29,8 @@ function SignOutButton() {
 }
 
 export default SignOutButton;
+// onClick={() => {
+//   signOut({ redirect: false }).then(() => {
+//       router.push("/"); // Redirect to the dashboard page after signing out
+//   });
+// }}

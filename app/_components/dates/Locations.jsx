@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import {
   AdvancedMarker,
   APIProvider,
@@ -8,27 +9,26 @@ import {
   Pin,
   useMapsLibrary,
 } from "@vis.gl/react-google-maps";
-import { useCallback, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
 import UserDetails from "@/app/_components/dates/UserDetails";
-import DateDetails from "@/app/_components/dates/DateDetails";
 import Button from "../Button";
 import getUserLocation from "@/app/_utils/getUserLocation";
 import useInputDebounce from "@/app/hooks/useInputDebounce";
-import { updateDatelocation } from "@/app/_lib/action";
-import Image from "next/image";
+import { updateDateLocation } from "@/app/_lib/action";
 
 const nairobiCenter = { lat: -1.2767988, lng: 36.8163994 };
 
 function Locations({
   image,
-  googleImage,
   gender,
   dateLocation,
   setDateLocation,
+  userLocation,
+  setUserLocation,
   name,
-  setRevealDateDetails,
-  revealDateDetails,
+  userDetails,
+  userId,
 }) {
   return (
     <div className="relative h-full max-w-full">
@@ -44,24 +44,20 @@ function Locations({
         </svg>
       </div>
 
-      {/* <UserDetails
-        image={image}
-        googleImage={googleImage}
-        gender={gender}
-        name={name}
-      /> */}
+      {userDetails ? <UserDetails userDetails={userDetails} /> : null}
 
       <APIProvider
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
         onLoad={() => console.log("Maps API has loaded.")}
       >
         <GoogleMaps
-          setRevealDateDetails={setRevealDateDetails}
-          revealDateDetails={revealDateDetails}
           setDateLocation={setDateLocation}
           dateLocation={dateLocation}
+          setUserLocation={setUserLocation}
+          userLocation={userLocation}
           image={image}
           name={name}
+          userId={userId}
         />
       </APIProvider>
     </div>
@@ -70,22 +66,20 @@ function Locations({
 
 function GoogleMaps({
   setDateLocation,
-  setRevealDateDetails,
-  revealDateDetails,
   dateLocation,
-  image,
-  name,
+
+  radius,
+  userId,
 }) {
   const map = useMap();
+
   const [placesService, setPlacesService] = useState(null);
   const [sessionToken, setSessionToken] = useState();
   const [autocompleteService, setAutocompleteService] = useState(null);
   const [predictionResults, setPredictionResults] = useState([]);
-  const [userLocation, setUserLocation] = useState(null);
-  const [radius, setRadius] = useState();
   const [search, setSearch] = useInputDebounce("");
-  const [hoverMarker, setHoverMarker] = useState();
-  // const [pinSvg, setPinSvg] = useState();
+  const [pinSvg, setPinSvg] = useState();
+  const [userLocation, setUserLocation] = useState();
 
   // the case)
   const placesLibrary = useMapsLibrary("places");
@@ -108,11 +102,11 @@ function GoogleMaps({
       async function getPlace() {
         // const request = { input: "harvard", sessionToken };
 
-        console.log(
-          userLocation?.[0]
-            ? { lat: userLocation[0], lng: userLocation[0] }
-            : nairobiCenter
-        );
+        // console.log(
+        //   userLocation?.[0]
+        //     ? { lat: userLocation[0], lng: userLocation[0] }
+        //     : nairobiCenter
+        // );
 
         let request = {
           input: search,
@@ -157,17 +151,26 @@ function GoogleMaps({
         lat: placeDetails.geometry.location.lat(),
         lng: placeDetails.geometry.location.lng(),
       },
-      formatted_address: placeDetails.formatted_address,
+      address: placeDetails.formatted_address,
       rating: placeDetails.rating,
       url: placeDetails.url,
+      placeid: placeDetails.placeid,
     };
-    async function updateLocation(datePlace) {
-      const data = await updateDatelocation(location);
+
+    async function updateLocation(place) {
+      const locationUpdate = { ...place };
+
+      locationUpdate.userid = userId;
+      locationUpdate.latlng = `POINT(${locationUpdate.location.lng} ${locationUpdate.location.lat})`;
+
+      delete locationUpdate.location;
+
+      const data = await updateDateLocation(locationUpdate);
       if (data) notifyDateLocationUpdated();
     }
 
     setDateLocation(datePlace);
-    updateLocation(dateLocation);
+    updateLocation(datePlace);
   }, []);
 
   const handleSuggestionClick = useCallback(
@@ -181,6 +184,8 @@ function GoogleMaps({
       };
 
       const detailsRequestCallback = (placeDetails) => {
+        placeDetails.placeid = placeId;
+
         onPlaceSelect(placeDetails);
         setPredictionResults([]);
         // setInputValue(placeDetails?.formatted_address ?? "");
@@ -203,6 +208,8 @@ function GoogleMaps({
       };
 
       const detailsRequestCallback = (placeDetails) => {
+        placeDetails.placeid = placeId;
+
         onPlaceSelect(placeDetails);
       };
 
@@ -211,41 +218,40 @@ function GoogleMaps({
     [placesLibrary, placesService]
   );
 
-  // useEffect(() => {
+  useEffect(() => {
+    const parser = new DOMParser();
 
-  //   setPinSvg(pinSvg);
-  //   console.log(parser);
-  // }, []);
+    const pinSvgString = `<svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+      
+      fill= ""
+      >
+        <path d="M440-42v-80q-125-14-214.5-103.5T122-440H42v-80h80q14-125 103.5-214.5T440-838v-80h80v80q125 14 214.5 103.5T838-520h80v80h-80q-14 125-103.5 214.5T520-122v80h-80Zm40-158q116 0 198-82t82-198q0-116-82-198t-198-82q-116 0-198 82t-82 198q0 116 82 198t198 82Zm0-120q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Z" />
+      </svg>`;
 
-  const parser = new DOMParser();
+    setPinSvg(
+      parser.parseFromString(pinSvgString, "image/svg+xml").documentElement
+    );
+  }, []);
 
-  const pinSvgString = `<svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="24px"
-      viewBox="0 -960 960 960"
-      width="24px"
-    
-      className="fill-orange-700"
-    >
-      <path d="M440-42v-80q-125-14-214.5-103.5T122-440H42v-80h80q14-125 103.5-214.5T440-838v-80h80v80q125 14 214.5 103.5T838-520h80v80h-80q-14 125-103.5 214.5T520-122v80h-80Zm40-158q116 0 198-82t82-198q0-116-82-198t-198-82q-116 0-198 82t-82 198q0 116 82 198t198 82Zm0-120q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Z" />
-    </svg>`;
-
-  const pinSvg = parser.parseFromString(
-    pinSvgString,
-    "image/svg+xml"
-  ).documentElement;
+  if (!pinSvg) return null;
 
   // if (!placesLibrary || !map) return <p>loading</p>;
 
   return (
     <>
-      <SearchDateLocations
-        setSearch={setSearch}
-        setRadius={setRadius}
-        setUserLocation={setUserLocation}
-        predictionResults={predictionResults}
-        handleSuggestionClick={handleSuggestionClick}
-      />
+      {dateLocation?.name ? null : (
+        <SearchDateLocations
+          setSearch={setSearch}
+          setUserLocation={setUserLocation}
+          predictionResults={predictionResults}
+          handleSuggestionClick={handleSuggestionClick}
+          dateLocation={dateLocation}
+        />
+      )}
       <Map
         defaultZoom={13}
         defaultCenter={userLocation?.lat ? userLocation : nairobiCenter}
@@ -274,13 +280,16 @@ function GoogleMaps({
 
 function SearchDateLocations({
   setSearch,
-  setRadius,
   setUserLocation,
   predictionResults,
   handleSuggestionClick,
+  dateLocation,
 }) {
+  if (dateLocation?.name) return null;
   return (
-    <div className="z-30 absolute top-1 rounded-lg left-0 right-0  w-fit mx-auto border grid mobile:flex  gap-4 bg-opacity-30 p-2 bg-stone-700 shadow-lg m-w-full items-start ">
+    <div
+      className={`z-20 absolute top-1 rounded-lg left-0 right-0  w-fit mx-auto border grid mobile:flex  gap-4 bg-opacity-30 p-2 bg-stone-700 shadow-lg  items-start  `}
+    >
       <div className="bg-white flex  p-2 gap-2  rounded">
         <div>
           <input
@@ -308,7 +317,7 @@ function SearchDateLocations({
         <Button
           onClick={async () => {
             const pos = await getUserLocation();
-            if (pos.message) alert(location.message);
+            if (pos.message) alert(pos.message);
             if (pos.location) {
               setUserLocation(pos.location);
             }
@@ -328,18 +337,6 @@ function SearchDateLocations({
           </svg>
         </Button>
       </div>
-      <select
-        name=""
-        id=""
-        className="border-stone-800 rounded-md p-2"
-        onChange={(e) => setRadius(+e.target.value)}
-      >
-        <option value="2">2 Km</option>
-        <option value="5">5 Km</option>
-        <option value="10">10 Km</option>
-        <option value="20">20 Km</option>
-        <option value="40">40 Km</option>
-      </select>
     </div>
   );
 }

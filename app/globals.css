@@ -62,6 +62,13 @@ h2 {
 h3 {
   @apply text-xl font-semibold;
 }
+/* #my-popper {
+  z-index: 100 !important;
+} */
+
+.react-aria-Popover {
+  z-index: 100 !important;
+}
 
 a:link,
 a:visited {

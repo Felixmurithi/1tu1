@@ -14,20 +14,14 @@ import { maxImageSize } from "@/app/_lib/dataConfig";
 import { updateUser } from "@/app/_lib/action";
 import getAge from "@/app/_utils/getAge";
 
-export default function Update({
-  userId,
-  googleImage,
-  uploadedImage,
-  gender,
-  birthday,
-}) {
+export default function Update({ userId, userImage, gender, birthday }) {
   // const [birthday, setBirthday] = useState(today(getLocalTimeZone()));
   const [birthdate, setBirthdate] = useState(
     parseDate(birthday || "2020-02-03")
   );
   //image from upload
   const [img, setImg] = useState();
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(userImage);
   const [loadingI, setLoadingI] = useState(false);
   const [loadingII, setLoadingII] = useState(false);
 
@@ -55,7 +49,7 @@ export default function Update({
   const notifyImageUpdated = () =>
     toast.success("Your profile image updated successfully");
   const notifyUserDataUpdated = () =>
-    toast.success("Your profile image updated successfully");
+    toast.success("Your profile iupdated successfully");
 
   useEffect(
     function () {
@@ -73,14 +67,6 @@ export default function Update({
     [img]
   );
 
-  useEffect(
-    function () {
-      if (uploadedImage) {
-        setImage(uploadedImage);
-      }
-    },
-    [uploadedImage]
-  );
   async function uploadImage(img, userId) {
     setLoadingI(true);
     const formData = new FormData();
@@ -116,11 +102,14 @@ export default function Update({
   return (
     <main className="">
       <form
-        className=" w-fit    grid gap-12 justify-start shadow-lg px-8   mobile:px-20 pb-8 mx-auto sm:px-44 "
+        className=" w-fit z-30    grid gap-12 justify-start shadow-lg px-8   mobile:px-20 pb-8 mx-auto sm:px-44 "
         action={async (formData) => {
-          const age = getAge(birthday);
+          const age = getAge(birthdate);
           setLoadingII(true);
+
           if (!age || age < 17) {
+            setLoadingII(false);
+
             return setAgeError(
               "Birthday is required for age verification, must be 18 yrs or older"
             );
@@ -142,7 +131,6 @@ export default function Update({
               handleImageChange={handleImageChange}
               imgURL={imgURL}
               image={image}
-              googleImage={googleImage}
             />
 
             {imgError && <p className="block">{imgError}</p>}

@@ -1,5 +1,5 @@
 export default function getUserLocation() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     // if geolocation is supported by the users  browser
     // if geolocation is not supported by the users browser
     if (navigator.geolocation) {
@@ -16,7 +16,7 @@ export default function getUserLocation() {
         //latLNG
         // if there was an error getting the users location
         (error) => {
-          resolve({ message: "Error getting user location:" });
+          resolve({ message: "Error getting user location, enable access" });
         }
       );
     } else {

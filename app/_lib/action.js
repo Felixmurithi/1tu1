@@ -1,15 +1,30 @@
 "use server";
 import { signIn, signOut } from "./auth";
-import { getDBData, updateDB } from "@/app/_lib/data-service";
+import {
+  getUserData,
+  updateUserData,
+  updateInsertLocation,
+  getNearbyDatesData,
+  getAllDatesData,
+} from "@/app/_lib/data-service";
+export async function updateDateLocation(location) {
+  const data = await updateInsertLocation(location);
 
-export async function updateDatelocation({ location, userId }) {
-  const data = await updateDB("locations", data, userId);
-
-  return data;
+  // return data;
 }
 
-export async function getuserData({ table, fields, userId }) {
-  const data = await getDBData(table, fields, userId);
+export async function nearbyDatesAction(long, lat, meters, userId) {
+  const dates = await getNearbyDatesData(long, lat, meters, userId);
+
+  return dates;
+}
+export async function allDatesAction(long, lat, userId) {
+  const dates = await getAllDatesData(long, lat, userId);
+  return dates;
+}
+
+export async function getUserAction({ fields, userId }) {
+  const data = await getUserData(fields, userId);
 
   return data;
 }
@@ -19,7 +34,7 @@ export async function updateUser(formData) {
   const birthday = formData.get("birthday");
 
   const userId = formData.get("userId");
-  const data = await updateDB("users", [{ gender, birthday }], userId);
+  const data = await updateUserData("users", [{ gender, birthday }], userId);
   return data;
 }
 // update start ed workking with either array or object.
@@ -29,7 +44,11 @@ export async function signInAction() {
 }
 
 export async function signOutAction() {
-  await signOut({ redirectTo: "/", redirect: true });
+  // signOut({ redirect: false });
+  signOut({ redirectTo: "/", redirect: true });
+  // signOut({ callbackUrl: "/", redirect: true });
+  // await signOut("goog", { redirectTo: "/" });
+  // redirect("/");
 
   // signOut({ redirectTo: "/", replace: true });
 }
