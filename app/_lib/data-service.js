@@ -1,5 +1,87 @@
 import { supabase, supabaseUrl } from "./supabase";
 
+export async function updateNotifications(notifications) {
+  const { data, error } = await supabase
+    .from("notifications")
+    .upsert(notifications);
+
+  console.log(data);
+
+  if (error) {
+    console.error(error);
+    throw new Error("error updating notifications status");
+  }
+}
+
+export async function getNofications(ids) {
+  const update= ids
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("name, type, id")
+    .eq("to", id)
+    .eq("read", false);
+
+  console.log(data);
+
+  if (data) return data;
+
+  if (error) {
+    console.error(error);
+    throw new Error("Error fetching notifactions");
+  }
+}
+
+export async function insertDate(date) {
+  const { data, error } = await supabase.from("dates").insert([date]);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Date could not be created");
+  }
+}
+export async function insertNotification(notification) {
+  const { data, error } = await supabase
+    .from("notifications")
+    .insert([notification]);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Date could not be created");
+  }
+}
+
+export async function updateInsertDate(date) {
+  const { data, error } = await supabase
+    .from("dates")
+    .select("userid")
+    .eq("userid", date.userid);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Error updating date");
+  }
+
+  if (data[0]) {
+    const { data, error } = await supabase
+      .from("dates")
+      .update(location)
+      .eq("userid", location.userid);
+
+    if (error) {
+      console.error(error);
+      throw new Error("Date could not be updated");
+    }
+  } else {
+    const { data, error } = await supabase.from("dates").insert([location]);
+
+    if (error) {
+      console.error(error);
+      throw new Error("Date could not be created");
+    }
+  }
+}
+
 export async function getMyDateLocation(userid) {
   const { data, error } = await supabase
     .from("locations")

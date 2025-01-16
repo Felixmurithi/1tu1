@@ -15,7 +15,7 @@ import UserDetails from "@/app/_components/dates/UserDetails";
 import Button from "../Button";
 import getUserLocation from "@/app/_utils/getUserLocation";
 import useInputDebounce from "@/app/hooks/useInputDebounce";
-import { updateDateLocation } from "@/app/_lib/action";
+import { updateDateLocationAction } from "@/app/_lib/action";
 
 const nairobiCenter = { lat: -1.2767988, lng: 36.8163994 };
 
@@ -27,9 +27,34 @@ function Locations({
   userLocation,
   setUserLocation,
   name,
+  setUserDetails,
   userDetails,
   userId,
+  mobile,
+  allDates,
+  openMenu,
+  setOpenMenu,
+  revealUserDetails,
+  setRevealUserDetails,
 }) {
+  // will be false initially if the dateLocation is set
+
+  useEffect(() => {
+    //if desktop u canb alkways show user details
+    if (!mobile) return setRevealUserDetails(true);
+    // if mobile but menu is open u cant reveal user
+    if (mobile && !openMenu) return setRevealUserDetails(true);
+    // else
+    if (mobile && openMenu) setRevealUserDetails(false);
+  }, [mobile, openMenu]);
+
+  useEffect(() => {
+    if (!userDetails && mobile) {
+      setOpenMenu(true);
+    }
+    // if (userDetails && mobile) setOpenMenu(false);
+  }, [userDetails, mobile]);
+
   return (
     <div className="relative h-full max-w-full">
       <div className="hidden">
@@ -44,7 +69,14 @@ function Locations({
         </svg>
       </div>
 
-      {userDetails ? <UserDetails userDetails={userDetails} /> : null}
+      {userDetails && revealUserDetails ? (
+        <UserDetails
+          userDetails={userDetails}
+          userId={userId}
+          setDateLocation={setDateLocation}
+          setUserDetails={setUserDetails}
+        />
+      ) : null}
 
       <APIProvider
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
@@ -58,6 +90,9 @@ function Locations({
           image={image}
           name={name}
           userId={userId}
+          allDates={allDates}
+          setUserDetails={setUserDetails}
+          userDetails={userDetails}
         />
       </APIProvider>
     </div>
@@ -67,9 +102,13 @@ function Locations({
 function GoogleMaps({
   setDateLocation,
   dateLocation,
-
+  allDates,
   radius,
   userId,
+  setUserDetails,
+  name,
+  image,
+  userDetails,
 }) {
   const map = useMap();
 
@@ -79,7 +118,10 @@ function GoogleMaps({
   const [predictionResults, setPredictionResults] = useState([]);
   const [search, setSearch] = useInputDebounce("");
   const [pinSvg, setPinSvg] = useState();
-  const [userLocation, setUserLocation] = useState();
+  const [userPinSvg, setUserPinSvg] = useState();
+  const [userLocation, setUserLocation] = useState(
+    dateLocation?.location?.lat ? dateLocation.location : null
+  );
 
   // the case)
   const placesLibrary = useMapsLibrary("places");
@@ -165,7 +207,7 @@ function GoogleMaps({
 
       delete locationUpdate.location;
 
-      const data = await updateDateLocation(locationUpdate);
+      const data = await updateDateLocationAction(locationUpdate);
       if (data) notifyDateLocationUpdated();
     }
 
@@ -223,23 +265,45 @@ function GoogleMaps({
 
     const pinSvgString = `<svg
         xmlns="http://www.w3.org/2000/svg"
-        height="24px"
+        height="16px"
         viewBox="0 -960 960 960"
-        width="24px"
-      
-      fill= ""
+        width="16px"
+        fill= "#f2f2f2"
       >
-        <path d="M440-42v-80q-125-14-214.5-103.5T122-440H42v-80h80q14-125 103.5-214.5T440-838v-80h80v80q125 14 214.5 103.5T838-520h80v80h-80q-14 125-103.5 214.5T520-122v80h-80Zm40-158q116 0 198-82t82-198q0-116-82-198t-198-82q-116 0-198 82t-82 198q0 116 82 198t198 82Zm0-120q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Z" />
+       <path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
+      </svg>`;
+
+    const userPinSvgString = `<svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="16px"
+        viewBox="0 -960 960 960"
+        width="16px"
+        fill= "#9a3412"
+      >
+       <path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
       </svg>`;
 
     setPinSvg(
       parser.parseFromString(pinSvgString, "image/svg+xml").documentElement
     );
+    setUserPinSvg(
+      parser.parseFromString(userPinSvgString, "image/svg+xml").documentElement
+    );
   }, []);
 
-  if (!pinSvg) return null;
+  if (!pinSvg || !userPinSvg) return null;
 
   // if (!placesLibrary || !map) return <p>loading</p>;
+
+  console.log(
+    userDetails?.lat
+      ? { lat: userDetails.lat, lng: userDetails.lng }
+      : userLocation?.lat
+      ? userLocation
+      : dateLocation?.lat
+      ? dateLocation.location
+      : nairobiCenter
+  );
 
   return (
     <>
@@ -253,30 +317,73 @@ function GoogleMaps({
         />
       )}
       <Map
-        defaultZoom={13}
-        defaultCenter={userLocation?.lat ? userLocation : nairobiCenter}
+        defaultZoom={12}
+        defaultCenter={
+          userDetails?.lat
+            ? { lat: userDetails.lat, lng: userDetails.lng }
+            : userLocation?.lat
+            ? userLocation
+            : dateLocation?.lat
+            ? dateLocation.location
+            : nairobiCenter
+        }
+        disableDefaultUI={true}
         mapId={process.env.NEXT_PUBLIC_MAP_ID}
         onClick={(e) => {
+          if (dateLocation.name) return e.stop();
+
           if (!e.detail.placeId) {
             return notifyPlacedidUndefined();
           }
+          // stop to show the info window
+          e.stop();
           handlePlaceClick(e.detail.placeId);
         }}
       >
         {dateLocation?.location?.lat ? (
-          <AdvancedMarker position={dateLocation.location}>
+          <AdvancedMarker
+            position={dateLocation.location}
+            onClick={() =>
+              setUserDetails({
+                ...dateLocation,
+                location: dateLocation.name,
+                name,
+                image,
+                user: true,
+              })
+            }
+          >
             <Pin
-              background={"#ea580c" || "#431407"}
-              glyph={pinSvg}
-              scale={1.5}
+              background={"#19170e"}
+              glyph={userPinSvg}
+              scale={1.2}
+              borderColor={"#19170e"}
             />
           </AdvancedMarker>
         ) : null}
+
+        {allDates?.[0] &&
+          allDates.map((date, i) => (
+            <AdvancedMarker
+              position={{ lat: date.lat, lng: date.lng }}
+              key={i}
+              onClick={() => setUserDetails(date)}
+            >
+              <Pin
+                background={"#9a3412"}
+                glyph={pinSvg}
+                scale={0.9}
+                // glyphColor={"#000000"}
+              />
+            </AdvancedMarker>
+          ))}
       </Map>
       <Toaster />
     </>
   );
 }
+
+//center should be state otherwise it will be a problem
 
 function SearchDateLocations({
   setSearch,

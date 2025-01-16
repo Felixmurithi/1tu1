@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+
 import Google from "next-auth/providers/google";
 import { createNewUser, getUserByEmail } from "./data-service";
 

@@ -11,7 +11,7 @@ export default function Header() {
       </Link>
 
       <div className="flex gap-1 mobile:gap-4 items-center">
-        <Link href={"/update"}>
+        <Link href={"/update"} className="hover:bg-orange-200">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"

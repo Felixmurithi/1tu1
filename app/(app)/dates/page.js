@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/app/_lib/auth";
-import Dates from "@/app/_components/dates/Dates";
+import DatesQueryClient from "@/app/_components/dates/DatesQueryClient";
 import getAge from "@/app/_utils/getAge";
 import { getMyDateLocation, getUserData } from "@/app/_lib/data-service";
+import Dates from "@/app/_components/dates/Dates";
 
 export const metadata = {
   title: "Find dates",
@@ -16,12 +17,13 @@ export default async function page() {
   let myDate;
 
   if (session?.user.userId) {
-    const [{ gender, birthday, image }] = await getUserData(
-      ["gender", "birthday", "image"],
+    const [{ gender, birthday, image, notification }] = await getUserData(
+      ["gender", "birthday", "image", "notification"],
       session?.user.userId
     );
     user.image = image;
     user.gender = gender;
+    user.notification = notification;
     user.age = getAge(birthday);
 
     const [date] = await getMyDateLocation(session.user.userId);
@@ -58,6 +60,7 @@ export default async function page() {
         gender={user.gender}
         name={session?.user.name}
         myDate={myDate}
+        notification={user.notification}
       />
     </>
   );

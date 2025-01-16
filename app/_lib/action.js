@@ -6,11 +6,57 @@ import {
   updateInsertLocation,
   getNearbyDatesData,
   getAllDatesData,
+  insertDate,
+  insertNotification,
+  getNofications,
 } from "@/app/_lib/data-service";
-export async function updateDateLocation(location) {
+
+export async function getNoficationsAction(ids) {
+  console.log(ids);
+  // const data = getNofications(ids);
+  // return data;
+}
+
+export async function updateDateAction(formData) {
+  const userid = formData.get("userid");
+  const date = formData.get("date");
+  const dateid = formData.get("dateid");
+  const notification = true;
+  const active = true;
+
+  await updateUserData("users", { dateid, date, active }, userid);
+
+  await updateUserData("users", { active, notification }, dateid);
+
+  const notificationUpdate = {
+    from: userid,
+    to: dateid,
+
+    type: "request",
+  };
+
+  await insertNotification(notificationUpdate);
+}
+
+// 'request',
+// 'accepted',
+// 'rejected',
+// 'cancelled',
+// 'rescheduled
+
+export async function updateDateLocationAction(location) {
   const data = await updateInsertLocation(location);
 
   // return data;
+}
+
+export async function insertDateAction(formData) {
+  // {userdateid, :date.userid, userid:userId, date, }
+  const userid = formData.get("userid");
+  const userdateid = formData.get("userdateid");
+  const date = formData.get("date");
+
+  await insertDate({ userid, userdateid, date });
 }
 
 export async function nearbyDatesAction(long, lat, meters, userId) {
@@ -45,7 +91,7 @@ export async function signInAction() {
 
 export async function signOutAction() {
   // signOut({ redirect: false });
-  signOut({ redirectTo: "/", redirect: true });
+  await signOut({ redirectTo: "/", redirect: true });
   // signOut({ callbackUrl: "/", redirect: true });
   // await signOut("goog", { redirectTo: "/" });
   // redirect("/");

@@ -1,11 +1,19 @@
 import Image from "next/image";
-import Button from "../Button";
-import LikeUnlike from "../LikeUnlike";
-import DateTimeEntry from "@/app/_components/dates/DateTimeEntry";
+import LikeUnlike from "@/app/_components/LikeUnlike";
+import Button from "@/app/_components/Button";
+import DateTimeEntry from "@/app/_components/DateTimeEntry";
 
-function UserDetails({ userDetails }) {
+function UserDetails({ userDetails, setDateLocation, setUserDetails }) {
+  console.log(userDetails);
   return (
-    <div className="absolute top-1 rounded-lg left-0 right-0  w-fit mx-auto z-20 bg-white sm:flex p-4 gap-6 ">
+    <div className="absolute top-1 rounded-lg left-0 right-0  w-fit mx-auto z-10 bg-white sm:flex p-4 gap-6 border">
+      <Button
+        type="icon"
+        classes={"absolute top-0 right-0"}
+        onClick={() => setUserDetails(null)}
+      >
+        ✖
+      </Button>
       <div className="relative aspect-square w-24 h-24 sm:h-32 sm:w-32 overflow-x-auto ">
         <Image
           src={userDetails.image}
@@ -17,7 +25,7 @@ function UserDetails({ userDetails }) {
       <div className="grid content-startb gap-2">
         <div className="flex items-center">
           <h4 className="font-bold">{userDetails.name}</h4>
-          <LikeUnlike />
+          {userDetails.user ? "" : <LikeUnlike />}
         </div>
 
         <div>
@@ -27,16 +35,34 @@ function UserDetails({ userDetails }) {
             rel="noopener noreferrer"
             className="hover:underline hover:text-orange-500"
           >
-            <p className="text-sm font-thin">{userDetails.location}</p>
+            <p className="text-xs font-thin">{userDetails.location}</p>
           </a>
-          <p className="text-[0.7rem] font-thin">⭐ {userDetails.rating}/5</p>
+          <p className="text-xs font-thin">⭐ {userDetails.rating}/5</p>
         </div>
-
-        <Button classes={""}>send request</Button>
-        <div>hi</div>
-        <DateTimeEntry />
-        {/* <div>
-        </div> */}
+        {userDetails.user ? (
+          <Button
+            type="icon"
+            onClick={() => {
+              setDateLocation({});
+              setUserDetails(null);
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="#434343"
+            >
+              <path d="M120-120v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm584-528 56-56-56-56-56 56 56 56Z" />
+            </svg>
+          </Button>
+        ) : (
+          <div className="flex flex-col gap-6">
+            <DateTimeEntry />
+            <Button classes={""}>send request</Button>
+          </div>
+        )}
       </div>
     </div>
   );
