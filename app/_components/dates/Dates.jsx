@@ -36,6 +36,8 @@ export default function Dates({
   const [userDetails, setUserDetails] = useState();
   const [revealUserDetails, setRevealUserDetails] = useState();
   const [fetchAll, setFetchAll] = useState(false);
+  const [radius, setRadius] = useState();
+  const [fetchNearby, setFetchNearby] = useState(false);
 
   const mobile = useMediaQuery("(max-width: 440px)", setOpenMenu);
 
@@ -81,7 +83,7 @@ export default function Dates({
 
   async function getNotificationsStatus() {
     const notificationsStatus = await getNotificationsStatusAction(userId);
-   
+
     setNotification(notificationsStatus);
   }
 
@@ -105,7 +107,10 @@ export default function Dates({
     setFetchAll((val) => !val);
     checkDate.current = false;
   }
-
+  function refetchAllNearbyDates() {
+    setFetchNearby((val) => !val);
+    checkDate.current = false;
+  }
   // a pure functiojn first then async
   // no ifs in between because probably will lead to an useffect being cancelled after the render
 
@@ -211,6 +216,10 @@ export default function Dates({
                     refetchAllDates={refetchAllDates}
                     name={name}
                     changeTab={changeTab}
+                    radius={radius}
+                    setRadius={setRadius}
+                    refetchAllNearbyDates={refetchAllNearbyDates}
+                    fetchNearby={fetchNearby}
                   />,
                   <Bookmarks key={1} />,
                   <Notifications
@@ -241,7 +250,7 @@ export default function Dates({
       )}
 
       <div className={`bg-grey min-w-full h-full `}>
-        {/* <Locations
+        <Locations
           setUserDetails={setUserDetails}
           userDetails={userDetails}
           openMenu={openMenu}
@@ -257,12 +266,18 @@ export default function Dates({
           toast={toast}
           revealUserDetails={revealUserDetails}
           setRevealUserDetails={setRevealUserDetails}
-        /> */}
+          radius={radius}
+          changeTab={changeTab}
+          setRadius={setRadius}
+          refetchAllDates={refetchAllDates}
+          refetchAllNearbyDates={refetchAllNearbyDates}
+        />
       </div>
       <Toaster />
     </main>
   );
 }
+
 // contrent start css grid
 // with
 

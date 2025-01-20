@@ -19,10 +19,11 @@ export default function DatesList({
   refetchAllDates,
   name,
   changeTab,
+  radius,
+  setRadius,
+  refetchAllNearbyDates,
+  fetchNearby,
 }) {
-  const [radius, setRadius] = useState();
-  const [fetchNearby, setFetchNearby] = useState(false);
-
   // const {
   //   data: dates,
   //   isLoading,
@@ -38,11 +39,6 @@ export default function DatesList({
   // });
 
   // react query function needs to be an function taht returns a promise.
-
-  function refetchAllNearbyDates() {
-    setFetchNearby((val) => !val);
-    checkDate.current = false;
-  }
 
   useEffect(
     function () {
@@ -198,7 +194,7 @@ function UserCard({
         </div>
 
         <div className="flex flex-col justify-self-end ">
-          <LikeUnlike />
+          {/* <LikeUnlike /> */}
           {openRequest !== date.userid && mobile && (
             <Button
               type="icon"

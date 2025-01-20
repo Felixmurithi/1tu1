@@ -205,9 +205,9 @@ export default function UserDate({
               <img
                 src={date.image}
                 alt="profile picture"
-                className="w-[100px] h-[100px] rounded-full bg-stone-200"
+                className="w-[80px] h-[80px] rounded-full bg-stone-200"
               />
-              <h4 className=" font-bold text-xl ">{date.name}</h4>
+              <h4 className=" font-bold text-lg ">{date.name}</h4>
             </div>
 
             <div className="flex  flex-wrap gap-2 text-xs font-thin">

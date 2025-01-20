@@ -1,16 +1,31 @@
 import Image from "next/image";
 import LikeUnlike from "@/app/_components/LikeUnlike";
 import Button from "@/app/_components/Button";
-import DateTimeEntry from "@/app/_components/DateTimeEntry";
 
-function UserDetails({ userDetails, setDateLocation, setUserDetails }) {
-  console.log(userDetails);
+import DateRequest from "@/app/_components/dates/DateRequest";
+
+function UserDetails({
+  userDetails,
+  setDateLocation,
+  setUserDetails,
+  userId,
+  name,
+  toast,
+  radius,
+  refetchAllDates,
+  changeTab,
+  refetchAllNearbyDates,
+}) {
+  function closeCard() {
+    setUserDetails(null);
+  }
+
   return (
     <div className="absolute top-1 rounded-lg left-0 right-0  w-fit mx-auto z-10 bg-white sm:flex p-4 gap-6 border">
       <Button
         type="icon"
         classes={"absolute top-0 right-0"}
-        onClick={() => setUserDetails(null)}
+        onClick={() => closeCard()}
       >
         ✖
       </Button>
@@ -58,10 +73,18 @@ function UserDetails({ userDetails, setDateLocation, setUserDetails }) {
             </svg>
           </Button>
         ) : (
-          <div className="flex flex-col gap-6">
-            <DateTimeEntry />
-            <Button classes={""}>send request</Button>
-          </div>
+          <DateRequest
+            mobile={false}
+            date={userDetails}
+            userId={userId}
+            toast={toast}
+            closeCard={closeCard}
+            refetchAllDates={refetchAllDates}
+            refetchAllNearbyDates={refetchAllNearbyDates}
+            radius={radius}
+            name={name}
+            changeTab={changeTab}
+          />
         )}
       </div>
     </div>
@@ -69,3 +92,5 @@ function UserDetails({ userDetails, setDateLocation, setUserDetails }) {
 }
 
 export default UserDetails;
+
+// date is this card

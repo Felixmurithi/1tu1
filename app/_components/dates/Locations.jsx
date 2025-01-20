@@ -9,7 +9,6 @@ import {
   Pin,
   useMapsLibrary,
 } from "@vis.gl/react-google-maps";
-import toast, { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import UserDetails from "@/app/_components/dates/UserDetails";
 import Button from "../Button";
@@ -21,7 +20,6 @@ const nairobiCenter = { lat: -1.2767988, lng: 36.8163994 };
 
 function Locations({
   image,
-  gender,
   dateLocation,
   setDateLocation,
   userLocation,
@@ -36,6 +34,11 @@ function Locations({
   setOpenMenu,
   revealUserDetails,
   setRevealUserDetails,
+  toast,
+  radius,
+  refetchAllDates,
+  changeTab,
+  refetchAllNearbyDates,
 }) {
   // will be false initially if the dateLocation is set
 
@@ -73,14 +76,19 @@ function Locations({
         <UserDetails
           userDetails={userDetails}
           userId={userId}
+          toast={toast}
           setDateLocation={setDateLocation}
           setUserDetails={setUserDetails}
+          radius={radius}
+          name={name}
+          refetchAllDates={refetchAllDates}
+          refetchAllNearbyDates={refetchAllNearbyDates}
+          changeTab={changeTab}
         />
       ) : null}
-
       <APIProvider
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
-        onLoad={() => console.log("Maps API has loaded.")}
+        // onLoad={() => console.log("Maps API has loaded.")}
       >
         <GoogleMaps
           setDateLocation={setDateLocation}
@@ -89,6 +97,7 @@ function Locations({
           userLocation={userLocation}
           image={image}
           name={name}
+          toast={toast}
           userId={userId}
           allDates={allDates}
           setUserDetails={setUserDetails}
@@ -103,12 +112,13 @@ function GoogleMaps({
   setDateLocation,
   dateLocation,
   allDates,
-  radius,
   userId,
   setUserDetails,
   name,
   image,
   userDetails,
+  toast,
+  radius,
 }) {
   const map = useMap();
 
@@ -295,16 +305,6 @@ function GoogleMaps({
 
   // if (!placesLibrary || !map) return <p>loading</p>;
 
-  console.log(
-    userDetails?.lat
-      ? { lat: userDetails.lat, lng: userDetails.lng }
-      : userLocation?.lat
-      ? userLocation
-      : dateLocation?.lat
-      ? dateLocation.location
-      : nairobiCenter
-  );
-
   return (
     <>
       {dateLocation?.name ? null : (
@@ -378,7 +378,6 @@ function GoogleMaps({
             </AdvancedMarker>
           ))}
       </Map>
-      <Toaster />
     </>
   );
 }

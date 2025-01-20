@@ -22,12 +22,10 @@ function Notifications({ setTab, userId, clearNotificationsNotification }) {
   }, []);
 
   async function clearNotification(userId) {
-    await clearNoficationAction(id);
+    await clearNoficationAction(userId);
     setNotifications((prev) => {
       return prev.filter(({ id }) => {
-        console.log(id);
-
-        userId !== id;
+        return userId !== id;
       });
     });
   }
