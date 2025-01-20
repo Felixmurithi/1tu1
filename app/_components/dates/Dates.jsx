@@ -8,16 +8,30 @@ import DateList from "@/app/_components/dates/Dateslist";
 import Notifications from "@/app/_components/dates/Notifications";
 import Button, { MenuButton } from "../Button";
 import Bookmarks from "@/app/_components/dates/Bookmarks";
-import { allDatesAction, getNoficationsAction } from "@/app/_lib/action";
+import UserDate from "@/app/_components/dates/UserDate";
+import {
+  allDatesAction,
+  clearNotificationsNotificationAction,
+  getNotificationsStatusAction,
+} from "@/app/_lib/action";
 import useMediaQuery from "@/app/hooks/useMediaQuery";
 
-export default function Dates({ userId, gender, image, name, myDate }) {
-  const [notifications, setNotifications] = useState();
-  const [tab, setTab] = useState(0);
+export default function Dates({
+  userId,
+  gender,
+  image,
+  name,
+  myDate,
+  userNotification,
+  dateid,
+}) {
+  const [notification, setNotification] = useState(userNotification || false);
+  const [tab, setTab] = useState(dateid ? 3 : 0);
   const [dateLocation, setDateLocation] = useState(myDate);
   const [allDates, setAllDates] = useState();
   const [openMenu, setOpenMenu] = useState(true);
   const checkDate = useRef(null);
+  const stopNotificationsCheckInitially = useRef(null);
   const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState();
   const [revealUserDetails, setRevealUserDetails] = useState();
@@ -65,6 +79,20 @@ export default function Dates({ userId, gender, image, name, myDate }) {
     [dateLocation, fetchAll]
   );
 
+  async function getNotificationsStatus() {
+    const notificationsStatus = await getNotificationsStatusAction(userId);
+   
+    setNotification(notificationsStatus);
+  }
+
+  useEffect(
+    function () {
+      stopNotificationsCheckInitially.current = true;
+      if (!stopNotificationsCheckInitially || notification) return;
+      getNotificationsStatus();
+    },
+    [tab]
+  );
   // grid only when the date Location is there  and not mobile version
 
   //openMenu to oepn sidemenu or button
@@ -80,22 +108,26 @@ export default function Dates({ userId, gender, image, name, myDate }) {
 
   // a pure functiojn first then async
   // no ifs in between because probably will lead to an useffect being cancelled after the render
-  async function getNofications() {
-    const data = await getNoficationsAction(userId);
 
-    if (data?.[0]) setNotifications(data);
+  async function clearNotificationsNotification(id) {
+    if (!notification) return;
+    await clearNotificationsNotificationAction(id);
+    setNotification(false);
   }
 
-  useEffect(() => {
-    getNofications();
-  }, []);
+  function notify() {
+    setNotification(true);
+  }
 
-  // set notifications to other actions
+  function changeTab(tab) {
+    setTab(tab);
+  }
+
   return (
     <main
       className={` h-full relative mobile: ${
         dateLocation?.name && !mobile ? "grid" : ""
-      } mobile:grid-cols-[1fr_3fr]`}
+      } mobile:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_3fr]`}
     >
       {dateLocation?.name ? (
         !openMenu ? (
@@ -148,7 +180,7 @@ export default function Dates({ userId, gender, image, name, myDate }) {
                 >
                   <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160ZM480-80q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80Z" />
                 </svg>
-                {notifications?.[0] ? (
+                {notification ? (
                   <span className="px-1.5 py-1.5 min-w-2 rounded-full bg-red-600 right-0 top-0 absolute"></span>
                 ) : (
                   ""
@@ -178,12 +210,26 @@ export default function Dates({ userId, gender, image, name, myDate }) {
                     toast={toast}
                     refetchAllDates={refetchAllDates}
                     name={name}
+                    changeTab={changeTab}
                   />,
                   <Bookmarks key={1} />,
                   <Notifications
                     key={2}
-                    notifications={notifications}
                     setTab={setTab}
+                    userId={userId}
+                    clearNotificationsNotification={
+                      clearNotificationsNotification
+                    }
+                  />,
+
+                  <UserDate
+                    key={3}
+                    userId={userId}
+                    toast={toast}
+                    notify={notify}
+                    name={name}
+                    refetchAllDates={refetchAllDates}
+                    changeTab={changeTab}
                   />,
                 ][tab]
               }

@@ -1,11 +1,21 @@
 import { supabase, supabaseUrl } from "./supabase";
 
-export async function updateNotifications(notifications) {
+export async function clearNotification(id) {
+  const { data, error } = await supabase
+    .from("notifications")
+    .update({ read: true })
+    .eq("id", id)
+    .select();
+
+  if (error) {
+    console.error(error);
+    throw new Error("error clearing notification");
+  }
+}
+export async function clearNotifications(notifications) {
   const { data, error } = await supabase
     .from("notifications")
     .upsert(notifications);
-
-  console.log(data);
 
   if (error) {
     console.error(error);
@@ -13,16 +23,12 @@ export async function updateNotifications(notifications) {
   }
 }
 
-export async function getNofications(ids) {
-  const update= ids
-
+export async function getNofications(id) {
   const { data, error } = await supabase
     .from("notifications")
     .select("name, type, id")
     .eq("to", id)
     .eq("read", false);
-
-  console.log(data);
 
   if (data) return data;
 

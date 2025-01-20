@@ -15,13 +15,20 @@ export default function DateRequest({
   radius,
   closeCard,
   name,
+  changeTab,
 }) {
   const [dateTime, setDateTime] = useState(now(getLocalTimeZone()));
   const [loading, setLoading] = useState(false);
 
+  function displayLoadingSpinner() {
+    setLoading(true);
+  }
+  function stopLoadingSpinner() {
+    setLoading(false);
+  }
+
   // gets the differnce between the first date and the second, if its positive the first date is bigger, comparing with > 0 gets a bollean
   //if false fisrst date is behind the second
-
   // console.log(now(getLocalTimeZone()).add({ days: 10 }).compare(dateTime) > 0);
 
   // const current = new Date(dateTime); //'Mar 11 2015' current.getTime() = 1426060964567
@@ -43,12 +50,17 @@ export default function DateRequest({
         <Button
           classes={"min-w-32"}
           onClick={async () => {
+            displayLoadingSpinner();
             const [{ active }] = await getUserAction({
               fields: "active",
               userId,
             });
 
-            if (active) return toast.error("u can only have 1 date at a time");
+            if (active) {
+              stopLoadingSpinner();
+              closeCard();
+              return toast.error("u can only have 1 date at a time");
+            }
 
             const [{ active: useractive }] = await getUserAction({
               fields: "active",
@@ -58,27 +70,41 @@ export default function DateRequest({
             if (useractive) {
               if (radius) refetchAllNearbyDates();
               else refetchAllDates();
+              stopLoadingSpinner();
+              closeCard();
               return toast.error("user not available");
             }
 
             if (
               !(now(getLocalTimeZone()).add({ days: 10 }).compare(dateTime) > 0)
-            )
-              return toast.error("set date not more than 10 days from now");
+            ) {
+              stopLoadingSpinner();
 
+              return toast.error("set date not more than 10 days from now");
+            }
+            if (
+              !(now(getLocalTimeZone()).add({ hours: 3 }).compare(dateTime) < 0)
+            ) {
+              stopLoadingSpinner();
+
+              return toast.error("set more than 3 hours from now");
+            }
             const formData = new FormData();
             formData.append("userid", userId);
             formData.append("date", dateTime.toAbsoluteString());
             formData.append("dateid", date.userid);
             formData.append("name", name);
 
-            setLoading(true);
-
             await updateDateAction(formData);
 
-            setLoading(false);
+            toast.success("Date request sent");
+
+            if (radius) refetchAllNearbyDates();
+            else refetchAllDates();
 
             closeCard();
+            stopLoadingSpinner();
+            changeTab(3);
           }}
         >
           {!loading ? "send request" : <SpinnerMiniII />}

@@ -9,29 +9,105 @@ import {
   insertDate,
   insertNotification,
   getNofications,
+  clearNotification,
 } from "@/app/_lib/data-service";
 
-export async function getNoficationsAction(ids) {
-  console.log(ids);
-  // const data = getNofications(ids);
-  // return data;
+export async function cancelAction(userId, dateId, name) {
+  const date = null;
+  const dateid = null;
+  const notification = true;
+  const active = false;
+  const accept = false;
+  const note = null;
+
+  await updateUserData("users", { accept, date, dateid, active, note }, userId);
+  await updateUserData(
+    "users",
+    { accept, date, dateid, notification, active, note },
+    dateId
+  );
+
+  //notification
+  const notificationUpdate = {
+    from: userId,
+    to: dateId,
+    name,
+    type: "cancelled",
+  };
+  await insertNotification(notificationUpdate);
+}
+export async function acceptAction(userId, dateId, name) {
+  await updateUserData("users", { accept: true }, userId);
+
+  const notificationUpdate = {
+    from: userId,
+    to: dateId,
+    name,
+    type: "accepted",
+  };
+  await insertNotification(notificationUpdate);
+}
+
+export async function rescheduleAction(formData) {
+  const userid = formData.get("userid");
+  const date = formData.get("date");
+  const dateid = formData.get("dateid");
+  const name = formData.get("name");
+  const notification = true;
+  const accept = true;
+
+  await updateUserData("users", { date, accept }, userid);
+
+  await updateUserData("users", { notification, date, accept: false }, dateid);
+
+  const notificationUpdate = {
+    from: userid,
+    to: dateid,
+    name,
+    type: "rescheduled",
+  };
+  await insertNotification(notificationUpdate);
+}
+
+export async function getNotificationsStatusAction(id) {
+  const [{ notification }] = await getUserData("notification", id);
+
+  return notification;
+}
+
+export async function clearNotificationsNotificationAction(id) {
+  await updateUserData("users", { notification: false }, id);
+}
+
+export async function clearNoficationAction(id) {
+  await clearNotification(id);
+}
+export async function getNoficationsAction(id) {
+  const data = getNofications(id);
+  return data;
 }
 
 export async function updateDateAction(formData) {
   const userid = formData.get("userid");
   const date = formData.get("date");
   const dateid = formData.get("dateid");
+  const name = formData.get("name");
   const notification = true;
   const active = true;
+  const accept = true;
 
-  await updateUserData("users", { dateid, date, active }, userid);
+  await updateUserData("users", { dateid, date, active, accept }, userid);
 
-  await updateUserData("users", { active, notification }, dateid);
+  await updateUserData(
+    "users",
+    { active, notification, date, dateid: userid },
+    dateid
+  );
 
   const notificationUpdate = {
     from: userid,
     to: dateid,
-
+    name,
     type: "request",
   };
 

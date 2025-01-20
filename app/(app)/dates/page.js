@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/app/_lib/auth";
-import DatesQueryClient from "@/app/_components/dates/DatesQueryClient";
 import getAge from "@/app/_utils/getAge";
 import { getMyDateLocation, getUserData } from "@/app/_lib/data-service";
 import Dates from "@/app/_components/dates/Dates";
@@ -17,12 +16,14 @@ export default async function page() {
   let myDate;
 
   if (session?.user.userId) {
-    const [{ gender, birthday, image, notification }] = await getUserData(
-      ["gender", "birthday", "image", "notification"],
-      session?.user.userId
-    );
+    const [{ gender, birthday, image, notification, dateid }] =
+      await getUserData(
+        ["gender", "birthday", "image", "notification", "dateid"],
+        session?.user.userId
+      );
     user.image = image;
     user.gender = gender;
+    user.dateid = dateid;
     user.notification = notification;
     user.age = getAge(birthday);
 
@@ -60,7 +61,8 @@ export default async function page() {
         gender={user.gender}
         name={session?.user.name}
         myDate={myDate}
-        notification={user.notification}
+        dateid={user.dateid}
+        userNotification={user.notification}
       />
     </>
   );

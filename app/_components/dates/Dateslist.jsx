@@ -18,6 +18,7 @@ export default function DatesList({
   toast,
   refetchAllDates,
   name,
+  changeTab,
 }) {
   const [radius, setRadius] = useState();
   const [fetchNearby, setFetchNearby] = useState(false);
@@ -99,6 +100,7 @@ export default function DatesList({
                 refetchAllNearbyDates={refetchAllNearbyDates}
                 radius={radius}
                 name={name}
+                changeTab={changeTab}
               />
             ) : (
               <p>dates near you</p>
@@ -121,6 +123,7 @@ function AllDates({
   refetchAllNearbyDates,
   radius,
   name,
+  changeTab,
 }) {
   const [openRequest, setOpenRequest] = useState(null);
 
@@ -144,6 +147,7 @@ function AllDates({
       radius={radius}
       closeCard={closeCard}
       name={name}
+      changeTab={changeTab}
     />
   ));
 }
@@ -170,6 +174,7 @@ function UserCard({
   radius,
   closeCard,
   name,
+  changeTab,
 }) {
   return (
     <div
@@ -235,6 +240,7 @@ function UserCard({
           radius={radius}
           closeCard={closeCard}
           name={name}
+          changeTab={changeTab}
         />
       ) : (
         ""

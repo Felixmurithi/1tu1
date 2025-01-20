@@ -1,37 +1,56 @@
 import NotificationsCard from "@/app/_components/dates/NotificationsCard";
-import { getNoficationsAction } from "@/app/_lib/action";
+import { clearNoficationAction, getNoficationsAction } from "@/app/_lib/action";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import SpinnerMini from "../SpinnerMini";
 
-function Notifications({ notifications, setTab }) {
+function Notifications({ setTab, userId, clearNotificationsNotification }) {
+  const [notifications, setNotifications] = useState();
+  const [loading, setLoading] = useState(true);
   // accet, declined , proposed a newtime for the date.
 
-  console.log(notifications);
+  async function getNofications() {
+    const data = await getNoficationsAction(userId);
 
-  const ids = notifications?.map(({ id }) => id);
-
-  async function sendIds() {
-    if (ids[0]) await getNoficationsAction(ids);
+    if (data?.[0]) setNotifications(data.reverse());
+    setLoading(false);
   }
 
   useEffect(() => {
-    sendIds();
-  });
+    getNofications();
+    clearNotificationsNotification(userId);
+  }, []);
+
+  async function clearNotification(userId) {
+    await clearNoficationAction(id);
+    setNotifications((prev) => {
+      return prev.filter(({ id }) => {
+        console.log(id);
+
+        userId !== id;
+      });
+    });
+  }
 
   return (
     <div className="relative">
       <div className="px-2 grid gap-4 content-start overflow-y-auto absolute top-0 bottom-0 right-0 left-0">
-        {notifications?.[0]
-          ? notifications?.map(({ name, type, id }) => (
-              <NotificationsCard
-                type={type}
-                name={name}
-                key={i}
-                setTab={setTab}
-                id={id}
-              />
-            ))
-          : "your notifications will appear here"}
+        {loading ? (
+          <SpinnerMini />
+        ) : notifications?.[0] ? (
+          notifications?.map(({ name, type, id }, i) => (
+            <NotificationsCard
+              type={type}
+              name={name}
+              key={i}
+              setTab={setTab}
+              id={id}
+              clearNotification={clearNotification}
+            />
+          ))
+        ) : (
+          "your notifications will appear here"
+        )}
       </div>
     </div>
   );

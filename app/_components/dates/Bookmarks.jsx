@@ -1,5 +1,5 @@
 function Bookmarks() {
-  return <div>get it sexxy</div>;
+  return <div>go get it. coming soon</div>;
 }
 
 export default Bookmarks;

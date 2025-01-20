@@ -13,7 +13,8 @@ export default function Button({
   const buttonStyles = {
     primary:
       "bg-orange-800  text-stone-900 px-2 py-1 text-white font-semibold hover:bg-orange-700",
-    secondary: "bg-blue-background  text-stone-900 px-2 py-1 text-white ",
+    secondary:
+      "px-2 py-1 border border-stone-400 hover:border-stone-700 text-stone-500 text-sm font-bold hover:bg-stone-100",
     transparent:
       "px-2 bg-transparent border-2 border-orange-800 py-1 font-semibold hover:border-orange-700 ",
     icon: "px-1 py-0 w-max  hover:bg-orange-100 ",

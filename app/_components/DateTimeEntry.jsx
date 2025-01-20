@@ -10,10 +10,10 @@ function DateTimeEntry({ dateTime, setDateTime }) {
   // const [date, setDate] = useState(today(getLocalTimeZone()));
 
   return (
-    <div className=" w-fit">
-      <label htmlFor="date" className=" text-sm">
+    <div className="w-fit grid gap-1">
+      <label htmlFor="date" className=" font-extralight text-sm">
         {" "}
-        enter date:
+        enter date & time:
       </label>
       <Provider theme={defaultTheme}>
         <DateField
