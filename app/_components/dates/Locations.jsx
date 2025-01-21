@@ -22,8 +22,6 @@ function Locations({
   image,
   dateLocation,
   setDateLocation,
-  userLocation,
-  setUserLocation,
   name,
   setUserDetails,
   userDetails,
@@ -88,13 +86,11 @@ function Locations({
       ) : null}
       <APIProvider
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
-        // onLoad={() => console.log("Maps API has loaded.")}
+        // onLoad={() => console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY)}
       >
         <GoogleMaps
           setDateLocation={setDateLocation}
           dateLocation={dateLocation}
-          setUserLocation={setUserLocation}
-          userLocation={userLocation}
           image={image}
           name={name}
           toast={toast}
@@ -208,6 +204,7 @@ function GoogleMaps({
       url: placeDetails.url,
       placeid: placeDetails.placeid,
     };
+    setUserLocation(datePlace.location);
 
     async function updateLocation(place) {
       const locationUpdate = { ...place };
@@ -318,19 +315,12 @@ function GoogleMaps({
       )}
       <Map
         defaultZoom={12}
-        defaultCenter={
-          userDetails?.lat
-            ? { lat: userDetails.lat, lng: userDetails.lng }
-            : userLocation?.lat
-            ? userLocation
-            : dateLocation?.lat
-            ? dateLocation.location
-            : nairobiCenter
-        }
+        defaultCenter={nairobiCenter}
+        center={userLocation}
         disableDefaultUI={true}
         mapId={process.env.NEXT_PUBLIC_MAP_ID}
         onClick={(e) => {
-          if (dateLocation.name) return e.stop();
+          if (dateLocation?.name) return e.stop();
 
           if (!e.detail.placeId) {
             return notifyPlacedidUndefined();
@@ -386,10 +376,10 @@ function GoogleMaps({
 
 function SearchDateLocations({
   setSearch,
-  setUserLocation,
   predictionResults,
   handleSuggestionClick,
   dateLocation,
+  setUserLocation,
 }) {
   if (dateLocation?.name) return null;
   return (

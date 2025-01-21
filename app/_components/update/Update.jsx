@@ -49,7 +49,7 @@ export default function Update({ userId, userImage, gender, birthday }) {
   const notifyImageUpdated = () =>
     toast.success("Your profile image updated successfully");
   const notifyUserDataUpdated = () =>
-    toast.success("Your profile iupdated successfully");
+    toast.success("Your profile updated successfully");
 
   useEffect(
     function () {

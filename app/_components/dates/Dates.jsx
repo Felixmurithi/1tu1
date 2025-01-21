@@ -128,11 +128,13 @@ export default function Dates({
     setTab(tab);
   }
 
+  // mobile:grid-cols-[1fr_3fr]  md:grid-cols-[1fr_4fr] lg:grid-cols-[1fr_5fr] sm:grid-cols-[1fr_5fr]
+
   return (
     <main
-      className={` h-full relative mobile: ${
+      className={` h-full relative ${
         dateLocation?.name && !mobile ? "grid" : ""
-      } mobile:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_3fr]`}
+      } mobile:grid-cols-[1fr_3fr]`}
     >
       {dateLocation?.name ? (
         !openMenu ? (
