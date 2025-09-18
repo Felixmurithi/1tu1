@@ -106,10 +106,8 @@ export default function Update({ userId, userImage, gender, birthday }) {
         action={async (formData) => {
           const age = getAge(birthdate);
           setLoadingII(true);
-
           if (!age || age < 17) {
             setLoadingII(false);
-
             return setAgeError(
               "Birthday is required for age verification, must be 18 yrs or older"
             );
