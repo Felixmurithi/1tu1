@@ -1,4 +1,5 @@
 import { supabase, supabaseUrl } from "./supabase";
+import { SESSION_EXPIRES_SECONDS } from "./constants/auth";
 
 export async function clearNotification(id) {
   const { data, error } = await supabase
@@ -210,13 +211,13 @@ export async function uploadImage(image, userId) {
   const [{ image: imageExistingPath }] = await getUserData(
     "users",
     "image",
-    userId
+    userId,
   );
 
   if (imageExistingPath) {
     const deleteImageName = imageExistingPath.substr(
       imageExistingPath.lastIndexOf("/") + 1,
-      imageExistingPath.length
+      imageExistingPath.length,
     );
     const { data, error } = await supabase.storage
       .from("user_profile_images")
@@ -276,8 +277,11 @@ export async function getBirthdayGender(email) {
 }
 
 export async function createNewUser(newUser) {
-  const { data, error } = await supabase.from("users").insert([newUser]);
-
+  const { data, error } = await supabase
+    .from("users")
+    .insert([newUser])
+    .select("id")
+    .single();
   if (error) {
     console.error(error);
     throw new Error("Guest could not be created");
@@ -298,5 +302,66 @@ export async function getUserByEmail(email) {
   return data;
 }
 
-// Post gress lat-lng- use postgis extension
-// add named schema
+export async function createUpdateSession(sessionId, userId) {
+  const sessionData = {
+    session_id: sessionId,
+    id: userId,
+    session_created_at: new Date().toISOString(),
+    session_expires_at: new Date(
+      Date.now() + SESSION_EXPIRES_SECONDS * 1000,
+    ).toISOString(), // 7 days
+  };
+
+  const { error } = await supabase.from("users").upsert(sessionData, {
+    onConflict: "userId",
+  });
+  if (error) {
+    console.error(error);
+    throw new Error("Session could not be created");
+  }
+}
+
+export async function getSession(sessionId) {
+      const { data, error } = await supabase
+        .from("users")
+        .select("session_id, session_created_at, session_expires_at, id")
+        .eq("session_id", sessionId)
+        .gt("session_expires_at", new Date().toISOString())
+        .single();
+      if (error) {
+        console.error(error);
+        return null;
+      }
+  return data;
+}
+
+export async function deleteSession(sessionId) {
+  const { error } = await supabase
+    .from("users")
+    .update({
+      session_id: null,
+      session_created_at: null,
+      session_expires_at: null,
+    })
+    .eq("session_id", sessionId);
+  if (error) {
+    console.error(error);
+    throw new Error("Session could not be deleted");
+  }
+}
+
+export async function getUserBySessionId(sessionId) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("id, email, name, image")
+    .eq("session_id", sessionId)
+    .gt("session_expires_at", new Date().toISOString())
+    .single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}

@@ -9,7 +9,7 @@ import { createNewUser, getUserByEmail } from "./data-service";
 const authConfig = {
   providers: [
     Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
+      clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],

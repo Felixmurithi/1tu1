@@ -19,7 +19,7 @@ export default async function page() {
     const [{ gender, birthday, image, notification, dateid }] =
       await getUserData(
         ["gender", "birthday", "image", "notification", "dateid"],
-        session?.user.userId
+        session?.user.userId,
       );
     user.image = image;
     user.gender = gender;

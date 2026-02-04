@@ -15,7 +15,7 @@ export const middleware = auth;
 // });
 
 export const config = {
-  matcher: ["/dates", "/update"],
+  matcher: [ "/update"],
 };
 
 // Middleware, request, redirecting and matching the route to run the middleware function
