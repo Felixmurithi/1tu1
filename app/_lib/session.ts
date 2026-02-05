@@ -68,7 +68,7 @@ export async function removeUserSession(
   cookies.delete(COOKIE_SESSION_KEY);
 }
 
-////TODO- when do u get session, what routes
+////TODO- where to usewhen do u get session, what routes
 // Updatates a session that is still valid expiration in database and cookie
 //used when user signin from the same client
 export async function updateUserSessionExpiration(

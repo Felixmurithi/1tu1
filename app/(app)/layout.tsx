@@ -29,6 +29,6 @@ export default function RootLayout({
   );
 }
 
-// body should be the only child ellement of html
+// body should be only child ellement of html
 
-// uysing grid u dont even have to use h-full on the child componenet
+// uysing grid u dont even have to use h-full on child componenet

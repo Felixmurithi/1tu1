@@ -22,16 +22,20 @@ export async function handleOauthCallback(
   const existingUser = await getUserByEmail(user.email);
   // 2. update session if user exists- create new not exteding time
 
-  //3. create user if doesn't exist
+  //3. set id
   let userId: string;
-  if (!existingUser) {
-    // Create new user if doesn't exist
+  if (existingUser) {
+
+     userId = existingUser.id;
+   
+  } else {
+
+     // Create new user if doesn't exist
     const newUser = await createNewUser(user);
     console.log("New user created:", newUser);
 
     userId = newUser.id;
-  } else {
-    userId = existingUser.id;
+   
   }
 
   // 4. Create user session and set authentication cookies

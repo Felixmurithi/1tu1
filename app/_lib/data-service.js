@@ -305,16 +305,16 @@ export async function getUserByEmail(email) {
 export async function createUpdateSession(sessionId, userId) {
   const sessionData = {
     session_id: sessionId,
-    id: userId,
     session_created_at: new Date().toISOString(),
     session_expires_at: new Date(
       Date.now() + SESSION_EXPIRES_SECONDS * 1000,
     ).toISOString(), // 7 days
   };
 
-  const { error } = await supabase.from("users").upsert(sessionData, {
-    onConflict: "userId",
-  });
+  const { error } = await supabase
+    .from("users")
+    .update(sessionData)
+    .eq("id", userId);
   if (error) {
     console.error(error);
     throw new Error("Session could not be created");
@@ -322,16 +322,16 @@ export async function createUpdateSession(sessionId, userId) {
 }
 
 export async function getSession(sessionId) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("session_id, session_created_at, session_expires_at, id")
-        .eq("session_id", sessionId)
-        .gt("session_expires_at", new Date().toISOString())
-        .single();
-      if (error) {
-        console.error(error);
-        return null;
-      }
+  const { data, error } = await supabase
+    .from("users")
+    .select("session_id, session_created_at, session_expires_at, id")
+    .eq("session_id", sessionId)
+    .gt("session_expires_at", new Date().toISOString())
+    .single();
+  if (error) {
+    console.error(error);
+    return null;
+  }
   return data;
 }
 
@@ -353,7 +353,7 @@ export async function deleteSession(sessionId) {
 export async function getUserBySessionId(sessionId) {
   const { data, error } = await supabase
     .from("users")
-    .select("id, email, name, image")
+    .select("id, email, name, image, birthday, gender, dateid")
     .eq("session_id", sessionId)
     .gt("session_expires_at", new Date().toISOString())
     .single();

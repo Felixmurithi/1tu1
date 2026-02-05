@@ -161,16 +161,3 @@ export async function updateUser(formData) {
 }
 // update start ed workking with either array or object.
 
-export async function signInAction() {
-  await signIn("google", { redirectTo: "/dates" });
-}
-
-export async function signOutAction() {
-  // signOut({ redirect: false });
-  await signOut({ redirectTo: "/", redirect: true });
-  // signOut({ callbackUrl: "/", redirect: true });
-  // await signOut("goog", { redirectTo: "/" });
-  // redirect("/");
-
-  // signOut({ redirectTo: "/", replace: true });
-}

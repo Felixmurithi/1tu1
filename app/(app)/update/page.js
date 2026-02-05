@@ -1,32 +1,27 @@
 import Update from "@/app/_components/update/Update";
-import { auth } from "../../_lib/auth";
-import { getUserData } from "@/app/_lib/data-service";
+import { requireAuth } from "@/app/_lib/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "About profile",
 };
 
 export default async function Page() {
-  const session = await auth();
-  let user = {};
-
-  if (session?.user.userId) {
-    const [{ image, gender, birthday }] = await getUserData(
-      ["image", "gender", "birthday"],
-      session?.user.userId,
-    );
-    user.image = image;
-    user.gender = gender;
-    user.birthday = birthday;
+  const userData = await requireAuth();
+  console.log(userData);
+  // const session = await auth();
+  // makes the entire roiutedynamic because it uses  cookies
+  if (!userData?.id) {
+    redirect("/login", "replace");
   }
 
   return (
     <>
       <Update
-        userId={session?.user.userId}
-        userImage={user.image}
-        gender={user.gender}
-        birthday={user.birthday}
+        userId={userData.id}
+        userImage={userData.image}
+        gender={userData.gender}
+        birthday={userData.birthday}
       />
     </>
   );

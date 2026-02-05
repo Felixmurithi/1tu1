@@ -23,7 +23,7 @@ export class OauthClient<T> {
   private readonly userInfo: {
     schema: z.ZodSchema<T>;
     parser: (data: T) => {
-      id: string;
+      
       email: string;
       name: string;
       picture?: string | null;
@@ -33,6 +33,8 @@ export class OauthClient<T> {
       locale?: string;
       firstName?: string;
       secondName?: string;
+      oauth_provider?: string;
+      oauth_id?: string;
     };
     //T is  a placeholder for any type
   };

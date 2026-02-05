@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticate } from "@/app/_lib/oauth/handleOauthCallback";
+import { handleOauthCallback } from "@/app/_lib/oauth/handleOauthCallback";
 import { OauthProviderSchema } from "@/app/_lib/zod/oauth";
 
 export async function GET(
@@ -29,9 +29,10 @@ export async function GET(
     );
   }
 
-  const authenticated = await authenticate(provider, code, state);
+  const authenticated = await handleOauthCallback(provider, code, state);
 
-  if (authenticated) return NextResponse.redirect("/dates");
+  if (authenticated)
+    return NextResponse.redirect(new URL("/dates", request.url));
 
   //if error mean authenticated is faalse
   return NextResponse.redirect(

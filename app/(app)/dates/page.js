@@ -1,68 +1,59 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/app/_lib/auth";
 import getAge from "@/app/_utils/getAge";
 import { getMyDateLocation, getUserData } from "@/app/_lib/data-service";
 import Dates from "@/app/_components/dates/Dates";
+import { requireAuth } from "@/app/_lib/auth";
 
 export const metadata = {
   title: "Find dates",
 };
 
 export default async function page() {
-  const session = await auth();
+  const userData = await requireAuth();
+  // const session = await auth();
   // makes the entire roiutedynamic because it uses  cookies
+  if (!userData.id) redirect("/login");
+  Object.assign(userData, {
+    ...userData,
+    age: getAge(userData.birthday),
+  });
 
-  let user = {};
   let myDate;
-
-  if (session?.user.userId) {
-    const [{ gender, birthday, image, notification, dateid }] =
-      await getUserData(
-        ["gender", "birthday", "image", "notification", "dateid"],
-        session?.user.userId,
-      );
-    user.image = image;
-    user.gender = gender;
-    user.dateid = dateid;
-    user.notification = notification;
-    user.age = getAge(birthday);
-
-    const [date] = await getMyDateLocation(session.user.userId);
-    if (date?.name) {
-      myDate = {
-        ...date,
-        location: {
-          lng: date.latlng.coordinates[0],
-          lat: date.latlng.coordinates[1],
-        },
-      };
-      delete myDate.latlng;
-    }
-
-    // const [dates] = await getAllDatesData(36.9243896, -1.2023038, 5);
-
-    // const dates = await getNearbyDatesData(36.9243896, -1.2023038, 20000, 5);
-    // select nearby_dates(36.9243896, -1.2023038,20000, 5);
-
-    // nearby_dates(36.9243896, -1.2023038,20000, 5);
-
-    // console.log(dates);
+  const [date] = await getMyDateLocation(userData.id);
+  if (date?.name) {
+    myDate = {
+      ...date,
+      location: {
+        lng: date.latlng.coordinates[0],
+        lat: date.latlng.coordinates[1],
+      },
+    };
+    delete myDate.latlng;
   }
 
-  if (!user.gender || !user.age) {
+  // const [dates] = await getAllDatesData(36.9243896, -1.2023038, 5);
+
+  // const dates = await getNearbyDatesData(36.9243896, -1.2023038, 20000, 5);
+  // select nearby_dates(36.9243896, -1.2023038,20000, 5);
+
+  // nearby_dates(36.9243896, -1.2023038,20000, 5);
+
+  // console.log(dates);
+
+  if (!userData.gender || !userData.age) {
     redirect("/update", "replace");
   }
 
   return (
     <>
       <Dates
-        userId={session?.user.userId}
-        image={user.image || session?.user.image}
-        gender={user.gender}
-        name={session?.user.name}
+        userId={userData.userId}
+        image={userData.image || userData.id}
+        gender={userData.gender}
+        name={userData.id}
         myDate={myDate}
-        dateid={user.dateid}
-        userNotification={user.notification}
+        dateid={userData.dateid}
+        userNotification={userData.notification}
       />
     </>
   );
