@@ -86,8 +86,7 @@ export class OauthClient<T> {
   private get redirectUrl() {
     return new URL(
       `/api/oauth/${this.provider}`,
-      process.env.NEXT_PUBLIC_OAUTH_REDIRECT_URL_BASE ||
-        "http://localhost:3000",
+      process.env.NEXTAUTH_URL
     );
   }
 
