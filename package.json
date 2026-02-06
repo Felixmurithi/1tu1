@@ -23,7 +23,8 @@
     "react-easy-crop": "^5.1.0",
     "react-hook-form": "^7.53.0",
     "react-hot-toast": "^2.4.1",
-    "react-image-crop": "^11.0.7"
+    "react-image-crop": "^11.0.7",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^20",
