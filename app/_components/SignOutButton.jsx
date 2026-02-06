@@ -1,22 +1,14 @@
 "use client";
-import { signOut } from "next-auth/react";
+import { signOutAction } from "@/app/_lib/actions/auth";
 
-// import { signOutAction } from "../_lib/action";
+export default function SignOutButton() {
+  const handleSignOut = async () => {
+    await signOutAction();
+  };
 
-function SignOutButton() {
   return (
-    <form
-    // action={signOutAction}
-    >
-      <button
-        className="px-1 py-0 w-max  hover:bg-orange-100"
-        // onClick={() => {
-        //   signOutAction().then(() => {
-        //     Router.push("/"); // Redirect to the dashboard page after signing out
-        //   });
-        // }}
-        onClick={() => signOut({ callbackUrl: "http://localhost:3000/" })}
-      >
+    <form action={handleSignOut}>
+      <button type="submit" className="px-1 py-0 w-max hover:bg-orange-100">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="24px"
@@ -30,10 +22,3 @@ function SignOutButton() {
     </form>
   );
 }
-
-export default SignOutButton;
-// onClick={() => {
-//   signOut({ redirect: false }).then(() => {
-//       router.push("/"); // Redirect to the dashboard page after signing out
-//   });
-// }}

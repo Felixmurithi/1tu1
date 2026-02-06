@@ -2,17 +2,16 @@ import { redirect } from "next/navigation";
 import getAge from "@/app/_utils/getAge";
 import { getMyDateLocation, getUserData } from "@/app/_lib/data-service";
 import Dates from "@/app/_components/dates/Dates";
-import { requireAuth } from "@/app/_lib/auth";
+import { getUserFromSession } from "@/app/_lib/session";
+import { cookies } from "next/headers";
 
 export const metadata = {
   title: "Find dates",
 };
 
 export default async function page() {
-  const userData = await requireAuth();
-  // const session = await auth();
-  // makes the entire roiutedynamic because it uses  cookies
-  if (!userData.id) redirect("/login");
+  const userData = await getUserFromSession(cookies());
+  if (!userData?.id) redirect("/login");
   Object.assign(userData, {
     ...userData,
     age: getAge(userData.birthday),

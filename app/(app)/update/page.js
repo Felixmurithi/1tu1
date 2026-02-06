@@ -1,5 +1,6 @@
 import Update from "@/app/_components/update/Update";
-import { requireAuth } from "@/app/_lib/auth";
+import { getUserFromSession } from "@/app/_lib/session";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -7,10 +8,8 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const userData = await requireAuth();
+  const userData = await getUserFromSession(cookies());
   console.log(userData);
-  // const session = await auth();
-  // makes the entire roiutedynamic because it uses  cookies
   if (!userData?.id) {
     redirect("/login", "replace");
   }

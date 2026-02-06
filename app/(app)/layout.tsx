@@ -9,7 +9,7 @@ const myFont = localFont({
 });
 
 export const metadata = {
-  title: "Ideally",
+  title: "1tu1",
   description: "Find a life partner who matches ur interest",
 };
 
