@@ -2,12 +2,8 @@
 import { signOutAction } from "@/app/_lib/actions/auth";
 
 export default function SignOutButton() {
-  const handleSignOut = async () => {
-    await signOutAction();
-  };
-
   return (
-    <form action={handleSignOut}>
+    <form action={signOutAction}>
       <button type="submit" className="px-1 py-0 w-max hover:bg-orange-100">
         <svg
           xmlns="http://www.w3.org/2000/svg"
