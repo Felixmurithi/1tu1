@@ -4,9 +4,10 @@ import { OauthProviderSchema } from "@/app/_lib/zod/oauth";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { provider: string } },
+  { params }: { params: Promise<{ provider: string }> },
 ) {
-  const providerResult = OauthProviderSchema.safeParse(params.provider);
+  const providerParam = await params;
+  const providerResult = OauthProviderSchema.safeParse(providerParam.provider);
   if (!providerResult.success) {
     return NextResponse.redirect(
       new URL("/login?error=invalid_provider", request.url),

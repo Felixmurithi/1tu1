@@ -10,7 +10,8 @@ export const metadata = {
 };
 
 export default async function page() {
-  const userData = await getUserFromSession(cookies());
+  const cookieStore = await cookies();
+  const userData = await getUserFromSession(cookieStore);
   if (!userData?.id) redirect("/login");
   Object.assign(userData, {
     ...userData,

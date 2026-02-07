@@ -4,7 +4,8 @@ import { getUserFromSession } from "@/app/_lib/session";
 import { cookies } from "next/headers";
 
 export async function POST(req) {
-  const user = await getUserFromSession(cookies());
+  const cookieStore = await cookies();
+  const user = await getUserFromSession(cookieStore);
   if (!user) {
     return NextResponse.json(
       { message: "You need to be authenticated to upload images" },

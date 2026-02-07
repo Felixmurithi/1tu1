@@ -8,8 +8,8 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const userData = await getUserFromSession(cookies());
-  console.log(userData);
+  const cookieStore = await cookies();
+  const userData = await getUserFromSession(cookieStore);
   if (!userData?.id) {
     redirect("/login", "replace");
   }

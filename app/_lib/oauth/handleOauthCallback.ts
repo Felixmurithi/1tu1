@@ -16,7 +16,7 @@ export async function handleOauthCallback(
     return false;
   }
 
-  const user = await client.fetchUser(code, state, cookies());
+  const user = await client.fetchUser(code, state, await cookies());
 
   // 1. Check if user exists in database
   const existingUser = await getUserByEmail(user.email);
@@ -25,21 +25,17 @@ export async function handleOauthCallback(
   //3. set id
   let userId: string;
   if (existingUser) {
-
-     userId = existingUser.id;
-   
+    userId = existingUser.id;
   } else {
-
-     // Create new user if doesn't exist
+    // Create new user if doesn't exist
     const newUser = await createNewUser(user);
     console.log("New user created:", newUser);
 
     userId = newUser.id;
-   
   }
 
   // 4. Create user session and set authentication cookies
-  await createUserSession(userId, cookies());
+  await createUserSession(userId, await cookies());
 
   // 5. Return success response with user data
   return true;
