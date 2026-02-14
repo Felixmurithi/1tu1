@@ -47,10 +47,10 @@ export default async function page() {
   return (
     <>
       <Dates
-        userId={userData.userId}
+        userId={userData.id}
         image={userData.image || userData.id}
         gender={userData.gender}
-        name={userData.id}
+        name={userData.name}
         myDate={myDate}
         dateid={userData.dateid}
         userNotification={userData.notification}
